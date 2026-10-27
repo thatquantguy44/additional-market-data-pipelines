@@ -2,15 +2,30 @@
 
 Last updated: 2026-10-26.
 
+**Current stopping point:** the first AAII slice, configured PostgreSQL live run,
+and pinned local workflow snapshot are complete. Read
+[AAII checkpoint and next scoped work](aaii_checkpoint.md) before implementation.
+The recommended next task is offline end-to-end coverage of the existing bounded
+live Dagster path. It does not add a source or enable a schedule.
+
+The workflow library is now a complete local snapshot at `agents/agent-skills/`,
+pinned by `agents/agent-skills.lock.json` to revision
+`f63ec56a3cc936408d792956ae583c3c96a825bd`. It replaces the old submodule;
+normal use and checksum verification require no network refresh.
+
 The user requested a sister repository named
 `additional-market-data-pipelines`, beside `fred-bronze-to-gold-pipeline`.
 They selected positioning and market structure as the main spec, requested the
 same general repository format, and retained disclosures/insider activity and a
 broader alternative-data mix for later.
 
-Completed: independent local repository scaffold, Spec 001, official-source
-catalog, future-theme roadmap, proposed architecture/data contracts, development
-guidance, and pinned workflow library. Application code is not implemented.
+Completed: independent repository scaffold and original design, plus the first
+AAII slice under Spec 002. The implementation has a strict local CSV manifest,
+immutable Bronze, observed Silver revisions, Gold/as-of features, audit,
+SQLite/PostgreSQL persistence, typed Parquet snapshots, replay, CLI, and Dagster
+asset/job/stopped schedule. A Databricks publisher and notebook are implemented
+but not live-tested in a workspace. A bounded official AAII XLS load is now
+verified in persistent local PostgreSQL; no recurring download or cloud deployment is active.
 
 The user also requested that every additional source discussed be retained in
 the handoff and roadmap. The [master roadmap](../roadmap.md) is the canonical
@@ -19,8 +34,9 @@ uses, limitations, and stable backlog IDs for all 14 additions.
 
 ## Retained source inventory
 
-Existing Spec 001 sequence: CFTC positioning → FINRA short-sale volume → OFR
-Short-term Funding Monitor. SEC fails-to-deliver remains a candidate extension.
+Current sequence: AAII first at the user's request, then the remaining Spec 001
+sources (CFTC positioning → FINRA short-sale volume → OFR Short-term Funding
+Monitor) remain planned. SEC fails-to-deliver remains a candidate extension.
 See the [source catalog](../catalog/README.md) for those original four sources.
 
 Additional positioning and market-structure candidates:
@@ -32,10 +48,11 @@ Additional positioning and market-structure candidates:
 - `sec-nmfp`: SEC money-market-fund portfolio holdings.
 - `dtcc-public-swaps`: DTCC public swap/security-based-swap dissemination.
 - `sec-midas`: SEC Market Structure Analytics / MIDAS published datasets.
-- `aaii-investor-sentiment`: AAII Investor Sentiment Survey; weekly bullish,
-  neutral, and bearish shares. Access review is required for historical downloads,
-  membership requirements, automation, and reuse terms; free full-history access
-  and an official public API have not been verified.
+- `aaii-investor-sentiment`: first implemented local CSV slice for weekly bullish,
+  neutral, and bearish shares. The current official XLS layout and bounded live
+  load are verified; recurring entitlement, membership requirements, and reuse
+  still require review. Fixtures are synthetic; no official
+  public API or free full-history entitlement has been verified.
 
 Later company/holdings candidates:
 
@@ -51,20 +68,38 @@ Later alternative-data candidates:
 - `usaspending`: Federal awards, recipients, and award transactions.
 
 Company insider filings and filing-event metadata also remain future themes.
-The new candidates are a research backlog; connector access and functionality
-have not been validated by live extraction.
+The other additions are a research backlog; connector access and functionality
+have not been validated by live extraction. All 14 IDs remain in the roadmap.
 
 ## Next work
 
-Next: review Spec 001's CFTC-first scope, local SQLite target, availability and
-revision semantics, and acceptance criteria. Then follow the pinned workflow's
-Plan → Tasks → Implement phases. Keep planned functionality distinct from tested
-runtime behavior. No GitHub remote or deployment has been created.
+Current contract: Spec 002, with plan/tasks under `tasks/`. Run the README demo
+and use `docs/deployment/aaii_runbook.md` for PostgreSQL, Dagster, Parquet, replay,
+and Delta publishing. Local tests cover validation, revisions/reversion, as-of
+changes, raw retention, replay, CLI, and Dagster. PostgreSQL has a real opt-in
+test; use a dedicated empty test database. `origin/main` is configured for this
+repository; the user requested a commit/push series at closeout. No cloud
+deployment or recurring download is active.
+
+Completed follow-up: strict runtime YAML now controls host/port/database/login,
+role/schema, SSL and timeout, with environment-only passwords. The official XLS
+was downloaded and inspected; four reported dates in October 2026 are persisted
+in database additional_market_data, schema aaii, via role aaii_writer, localhost
+port 55438. The persistent Compose project is additional-market-data-live.
+Settings are in ignored config/config.yaml and .env; raw and Parquet evidence is
+in data/aaii-live/verification.json. Reimport added zero versions.
+
+The next bounded engineering task and acceptance criteria are in the checkpoint.
+After that, provider work is to verify recurring acquisition entitlement and reuse terms
+before configuring scheduled downloads. Keep Reported Date labels unshifted. Next
+platform work: live-test Delta in a selected workspace; configure durable worker
+storage, secret injection, backups, freshness monitoring, and alerts before
+production scheduling. Mage/Airflow wrappers remain optional.
 
 After the initial pipeline slice, the recommended order for the new additions
 is NY Fed Primary Dealer Statistics → SEC N-MFP → FINRA ATS/non-ATS → OFR Hedge
 Fund Monitor. Keep DTCC and MIDAS queued for later evaluation. This ordering does
-not replace Spec 001's CFTC-first sequence.
+not replace the current AAII-first implementation priority.
 
 Use the roadmap's promotion checklist before implementing each candidate:
 verify access/terms, coverage and schema, publication/revision semantics, then

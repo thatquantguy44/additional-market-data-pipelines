@@ -1,7 +1,8 @@
 # Market-data source catalog
 
 Researched against official provider pages on 2026-10-26. These are source
-candidates, not implemented connectors. “Under-utilized” is a research theme;
+candidates, except for AAII's implemented authorized-local-CSV slice.
+Automated provider retrieval remains unverified. “Under-utilized” is a research theme;
 adoption and investment usefulness have not been measured. Free access does not
 establish unrestricted redistribution rights. Verify terms for each dataset.
 
@@ -10,11 +11,12 @@ Investor Sentiment Survey addition. The
 [master roadmap and source backlog](../roadmap.md) retains all 14 additional
 sources discussed, with official links, access methods, potential uses, and
 implementation considerations. The [master handoff](../handoffs/project_bootstrap.md)
-lists the complete inventory and current priorities. All remain unimplemented.
+lists the complete inventory and current priorities. Other sources remain unimplemented.
 
 | Priority | Dataset | Proposed research use | Access evidence | Important limit |
 | --- | --- | --- | --- | --- |
-| First | CFTC Commitments of Traders, TFF and Disaggregated | Category positioning and changes | CFTC documents a public API generally usable without a token | Report families and futures-only/combined reports differ |
+| First local slice | AAII Investor Sentiment Survey | Opinion shares and bull/bear spread | CSV import and a bounded official XLS live load are verified; routine automation remains unverified | Local captures are not historical publication vintages |
+| Planned | CFTC Commitments of Traders, TFF and Disaggregated | Category positioning and changes | CFTC documents a public API generally usable without a token | Report families and futures-only/combined reports differ |
 | Next | FINRA short-sale volume | Reported short-trading activity | Public catalog links downloads and a query API; confirm current free automated route before coding | Scope and denominators must match; short volume is not short interest |
 | Funding extension | OFR Short-term Funding Monitor | Funding rates and repo conditions | Official API explicitly needs neither tokens nor registration | Review per-series provenance, units, and underlying-source terms |
 | Candidate | SEC fails-to-deliver | Settlement-failure balances | Public ZIP downloads of pipe-delimited records | Outstanding balances are not daily flows or proof of abusive shorting |
@@ -60,8 +62,9 @@ Source: [SEC data and field definitions](https://www.sec.gov/data-research/sec-m
 
 ## AAII Investor Sentiment Survey
 
-Backlog ID: `aaii-investor-sentiment`. Status: research candidate; access review
-required. AAII reports weekly bullish, neutral, and bearish percentages for
+Backlog ID: `aaii-investor-sentiment`. Status: authorized-local-CSV slice
+implemented under Spec 002; automated-access review still required.
+AAII reports weekly bullish, neutral, and bearish percentages for
 individual investors' six-month stock-market outlook, with results published on
 Thursdays. The survey dates to 1987. These are stated opinions, not observed
 positions or trade flows.
@@ -73,9 +76,20 @@ at the calculation cutoff. Predictive usefulness remains a research question.
 Start from the official results and historical download pages. AAII describes
 full historical data as a member benefit; verify current membership/cost,
 automation permissions, and reuse terms before treating this as a free source.
-No official public API or live extraction contract has been verified. Preserve
+No official public API is verified. The official XLS endpoint and its current layout were verified by a bounded live run. Preserve
 survey-period labels separately from publication/retrieval timestamps; check
 percentage units, rounding, missing weeks, and revisions when creating fixtures.
+
+CSV tests use synthetic values. A subsequent explicitly authorized live request
+on 2026-10-26 downloaded the official XLS file successfully. Its SENTIMENT sheet
+has a row-4 Date/Bullish/Neutral/Bearish header, Excel date cells and fractional
+shares; the preceding row labels the dates Reported Date. Four observations in
+the October 1–26 window were saved to PostgreSQL with original-byte lineage.
+Earlier access challenges are not treated as a permanent access restriction;
+no bypass or member login was used. Recurring entitlement remains unverified. The reviewed
+[terms](https://www.aaii.com/privacy/tos) do not establish automation or
+redistribution permission for this pipeline. See the
+[runbook](../deployment/aaii_runbook.md) for the supported local workflow.
 
 Sources: [official survey page](https://www.aaii.com/sentiment-survey),
 [historical results and download page](https://www.aaii.com/sentimentsurvey/sent_results),

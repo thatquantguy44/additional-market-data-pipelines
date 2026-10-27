@@ -2,6 +2,12 @@
 
 Status: **draft for review**. Created 2026-10-26.
 
+**Current implementation:** [Spec 002](../spec002/README.md) supersedes the
+CFTC-first order, SQLite-only delivery, and scheduler deferral below. AAII local
+CSV ingestion, Parquet, PostgreSQL, and Dagster are the first executable slice.
+The CFTC/FINRA/OFR interfaces and acceptance criteria in this document remain
+planned; the commands below are not implemented for those providers.
+
 ## Objective
 
 Build an independent, manifest-driven market-data pipeline using the sister

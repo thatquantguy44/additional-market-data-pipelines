@@ -2,21 +2,23 @@
 
 Last updated: 2026-10-26. This is the canonical backlog for source selection;
 the [master handoff](handoffs/project_bootstrap.md) records the current pickup
-point. All sources below remain unimplemented. Research uses are hypotheses,
+point. AAII has an executable authorized-local-CSV slice; automated provider
+retrieval remains unverified. Other sources remain unimplemented. Research uses are hypotheses,
 and neither low adoption nor predictive value has been established.
 
 ## Main scope: positioning and market structure
 
-Spec 001 defines the shared ingestion path, starting with CFTC positioning,
-followed by FINRA short-sale volume and OFR funding measures. SEC settlement
+Spec 002 implements AAII first with Parquet, SQLite/PostgreSQL, and Dagster.
+Spec 001 retains the broader ingestion design, with CFTC positioning,
+FINRA short-sale volume and OFR funding measures still planned. SEC settlement
 failures are a candidate extension. Build and verify one provider end to end
 before extending coverage. Source selection and individual fields remain subject
 to provider-contract verification.
 
 ## Additional positioning and market-structure sources
 
-The following seven additions are retained for investigation after the first
-working pipeline slice. They supplement the existing CFTC, FINRA short-sale
+The following seven additions remain in the backlog. AAII is promoted to the
+first local CSV slice; the other six remain research candidates. They supplement CFTC, FINRA short-sale
 volume, OFR STFM, and SEC fails-to-deliver candidates in the
 [source catalog](catalog/README.md). FINRA venue transparency is distinct from
 short-sale volume; OFR Hedge Fund Monitor is distinct from STFM.
@@ -35,9 +37,10 @@ authentication, and free access before implementation.
 | `sec-midas` | [SEC Market Structure Analytics / MIDAS](https://www.sec.gov/featured-topics/market-structure-analytics) | Published market metrics and research datasets; market-quality analysis | Published dataset downloads | Verify each dataset's history and freshness; published extracts do not provide unrestricted access to underlying MIDAS feeds. |
 | `aaii-investor-sentiment` | [AAII Investor Sentiment Survey](https://www.aaii.com/sentiment-survey) | Weekly bullish, neutral, and bearish shares for individual investors; sentiment spread, changes, and historical-percentile research | Official survey results and [historical results/download page](https://www.aaii.com/sentimentsurvey/sent_results); access review required | Verify historical-data membership requirements, cost, permitted automation, and reuse terms; no official public API verified. Preserve survey period and actual publication time; opinion measures are not holdings or trade flows. |
 
-Recommended order for these additions: **NY Fed Primary Dealer Statistics → SEC
+AAII is first at the user's request. Recommended order for the remaining additions:
+**NY Fed Primary Dealer Statistics → SEC
 N-MFP → FINRA ATS/non-ATS → OFR Hedge Fund Monitor**. This is a prioritization
-proposal for the backlog, not a change to Spec 001's CFTC-first build order.
+proposal for the backlog; Spec 002 governs the current AAII-first build order.
 Retain DTCC and MIDAS for later evaluation; do not silently drop them because
 they are outside the first implementation slice.
 
@@ -78,9 +81,13 @@ adding connectors.
 
 ## Backlog status and promotion rules
 
-All **14 additional sources** above are recorded as **research candidates**.
-None has an implemented connector, validated live extraction, enabled manifest,
-or scheduled job. Retain the backlog IDs across future specs and handoffs.
+All **14 additional source IDs** are retained. AAII has a validated manifest,
+authorized-local-CSV importer, Parquet output, warehouse adapters, and a stopped
+Dagster schedule definition. A bounded official XLS download, current workbook parsing, and a four-row live
+PostgreSQL load are verified. Routine download entitlement remains unverified;
+offline fixtures are synthetic. The other **13 additions**
+remain research candidates without implemented connectors. Retain these IDs
+across future specs and handoffs.
 
 For each candidate, progress through these stages and record the evidence:
 
@@ -101,7 +108,10 @@ or downloading does not establish redistribution permission.
 
 ## Platform growth
 
-SQLite provides the first local integration target. Evaluate PostgreSQL, then
-Databricks/Delta and scheduling against actual workload needs. Keep this project's
+SQLite and Parquet provide the local integration targets. PostgreSQL persistence
+is implemented through the same contract. Dagster is the initial orchestrator;
+Airflow and Mage wrappers are deferred. A Databricks/Delta publisher is implemented
+but awaits live workspace verification. No production deployment is active.
+Keep this project's
 catalogs, schemas, secrets, job names, and deployment targets independent of the
 FRED project.
