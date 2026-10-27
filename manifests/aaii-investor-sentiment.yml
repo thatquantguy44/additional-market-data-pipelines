@@ -1,0 +1,16 @@
+source: aaii
+dataset: aaii-investor-sentiment
+format: csv
+columns:
+  survey_date: Date
+  bullish: Bullish
+  neutral: Neutral
+  bearish: Bearish
+date_format: '%m/%d/%Y'
+units: percent
+sum_tolerance: 0.002
+access:
+  method: authorized-local-export
+  source_url: https://www.aaii.com/sentimentsurvey/sent_results
+  terms_url: https://www.aaii.com/privacy/tos
+  automation: unverified-disabled

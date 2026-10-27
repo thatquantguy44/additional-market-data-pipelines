@@ -1,0 +1,19 @@
+source: aaii
+dataset: aaii-investor-sentiment
+format: xls
+columns:
+  survey_date: Date
+  bullish: Bullish
+  neutral: Neutral
+  bearish: Bearish
+date_format: '%Y-%m-%d'
+units: fraction
+sum_tolerance: 0.002
+date_basis: reported_date
+sheet: SENTIMENT
+header_row: 4
+access:
+  method: official-xls-download
+  source_url: https://www.aaii.com/files/surveys/sentiment.xls
+  terms_url: https://www.aaii.com/privacy/tos
+  automation: explicit-bounded-run

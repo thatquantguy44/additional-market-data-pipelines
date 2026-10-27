@@ -12,8 +12,9 @@ dist/
 .env.*
 !.env.example
 config/config.yaml
-data/
-artifacts/
+/data/
+/artifacts/
+.dagster/
 *.db
 *.db-*
 *.sqlite

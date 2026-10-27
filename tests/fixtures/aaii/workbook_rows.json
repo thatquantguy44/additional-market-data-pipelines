@@ -1,0 +1,14 @@
+{
+  "description": "Synthetic cells following the inspected SENTIMENT sheet; no provider observations",
+  "header": ["Date", "Bullish", "Neutral", "Bearish"],
+  "rows": [
+    ["1987-06-26", null, null, null],
+    [null, null, null, null],
+    ["2026-10-01", 0.35, 0.20, 0.45],
+    ["2026-10-08", 0.40, 0.20, 0.40],
+    ["2026-10-22", 0.37, 0.17, 0.46],
+    [null, null, null, null],
+    ["Observations over life of survey", null, null, null],
+    ["Avg", 0.38, 0.31, 0.31]
+  ]
+}

@@ -1,0 +1,13 @@
+## AAII Pipeline configuration file for PostgreSQL database
+warehouse: postgres
+root: ../data/aaii-postgres
+postgres:
+  host: 127.0.0.1
+  port: 55432
+  database: additional_market_data
+  user: market_data
+  role: null
+  schema: public
+  password_env: AAII_POSTGRES_PASSWORD
+  sslmode: prefer
+  connect_timeout: 15
