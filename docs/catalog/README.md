@@ -5,6 +5,12 @@ candidates, not implemented connectors. “Under-utilized” is a research theme
 adoption and investment usefulness have not been measured. Free access does not
 establish unrestricted redistribution rights. Verify terms for each dataset.
 
+This catalog describes the original four source candidates. The
+[master roadmap and source backlog](../roadmap.md) retains all 13 additional
+sources discussed, with official links, access methods, potential uses, and
+implementation considerations. The [master handoff](../handoffs/project_bootstrap.md)
+lists the complete inventory and current priorities. All remain unimplemented.
+
 | Priority | Dataset | Proposed research use | Access evidence | Important limit |
 | --- | --- | --- | --- | --- |
 | First | CFTC Commitments of Traders, TFF and Disaggregated | Category positioning and changes | CFTC documents a public API generally usable without a token | Report families and futures-only/combined reports differ |

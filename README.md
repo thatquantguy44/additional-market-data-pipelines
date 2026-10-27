@@ -12,7 +12,8 @@ scheduled jobs, or deployed infrastructure exist yet.**
 
 - [Spec 001: Positioning and market structure](specs/spec001/README.md)
 - [Source catalog and access considerations](docs/catalog/README.md)
-- [Later phases: disclosures and alternative data](docs/roadmap.md)
+- [Master roadmap and source backlog](docs/roadmap.md)
+- [Master handoff and current pickup point](docs/handoffs/project_bootstrap.md)
 - [Architecture](docs/deployment/architecture.md)
 - [Development and verification](docs/development/README.md)
 - [Pinned engineering workflow library](docs/development/agent_library.md)
