@@ -1,0 +1,20 @@
+name: additional-market-data
+services:
+  postgres:
+    image: postgres:17.6-alpine@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94
+    environment:
+      POSTGRES_DB: ${AAII_POSTGRES_DATABASE:-additional_market_data}
+      POSTGRES_USER: ${AAII_POSTGRES_USER:-market_data}
+      POSTGRES_PASSWORD: ${AAII_POSTGRES_PASSWORD:?Set AAII_POSTGRES_PASSWORD}
+    ports:
+      - "${AAII_POSTGRES_BIND_HOST:-127.0.0.1}:${AAII_POSTGRES_PORT:-55432}:5432"
+    volumes:
+      - aaii-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+volumes:
+  aaii-postgres:

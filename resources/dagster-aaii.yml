@@ -1,0 +1,13 @@
+# Paste into Dagster Launchpad for aaii_sentiment_job, or pass as a job config file.
+ops:
+  aaii_sentiment:
+    config:
+      input_path: tests/fixtures/aaii/sentiment.csv
+      manifest_path: manifests/aaii-investor-sentiment.yml
+      root: data/aaii-dagster-demo
+      warehouse: sqlite
+# For PostgreSQL: warehouse: postgres, use a different root, and inject
+# MARKET_DATA_POSTGRES_DSN into the Dagster worker environment.
+# Or set config_path: config/config.yaml and omit root/warehouse to use runtime YAML.
+# The schedule still imports local files by default. resources/dagster-aaii-live.yml
+# is an explicit bounded live example.

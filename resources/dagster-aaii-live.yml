@@ -1,0 +1,9 @@
+# Explicit bounded run configuration; do not attach these fixed dates to a schedule.
+ops:
+  aaii_sentiment:
+    config:
+      config_path: config/config.yaml
+      manifest_path: manifests/aaii-investor-sentiment-xls.yml
+      live: true
+      start: '2026-10-01'
+      end: '2026-10-26'
