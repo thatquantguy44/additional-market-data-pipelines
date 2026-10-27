@@ -1,0 +1,2 @@
+# Preserve the pinned upstream files without treating upstream whitespace as host changes.
+agents/agent-skills/** -whitespace

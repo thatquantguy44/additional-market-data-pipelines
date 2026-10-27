@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/thatquantguy44/agent-skills.git",
+  "revision": "f63ec56a3cc936408d792956ae583c3c96a825bd",
+  "git_tree": "5cf026092cd7b7ab88fb46f55f30eb372e0f5837",
+  "describe": "0.6.7-10-gf63ec56",
+  "license": "MIT",
+  "path": "agents/agent-skills",
+  "file_count": 188,
+  "snapshot_sha256": "ab09fab72f3b1ddf4319d0e7b9cc5cf66388b40922652e2b57a223bb3f93e795"
+}
