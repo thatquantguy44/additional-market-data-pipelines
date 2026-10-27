@@ -112,8 +112,23 @@ preserve any subsequent user changes. The configured destination is this project
 
 The first four checkpoint commits are `73f38d7` (local workflow snapshot),
 `aeb20cb` (AAII core), `173823d` (platform adapters/resources), and `5568fb5`
-(CI). This document ships in the final documentation commit; use `git log` for
-its revision and GitHub Actions for the hosted verification result.
+(CI). `c422c5d` contains the main documentation checkpoint. A final documentation
+follow-up records the hosted-CI block below; use `git log` for its revision.
+
+### Hosted CI status at push
+
+The initial five-commit series was pushed to `origin/main`. The
+[hosted run](https://github.com/thatquantguy44/additional-market-data-pipelines/actions/runs/40434195208)
+for `c422c5d` failed **before any steps started**: GitHub reported recent account
+payments failed or the Actions spending limit must be increased. This is an
+account-level execution block, not a test or workflow-code failure. Local
+verification remains 54 passing tests; do not describe hosted CI as passing.
+
+The account owner must resolve billing/Actions allowance before a hosted run can
+start. A future agent should check that status and retry the workflow after the
+external issue is resolved; do not alter billing or loosen verification gates.
+Once hosted verification can run, the recommended engineering task remains the
+offline bounded live Dagster coverage above. No further feature work was started.
 
 ```bash
 python3 scripts/verify_agent_skills.py

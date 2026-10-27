@@ -29,6 +29,9 @@ See `docs/development/verification.md` for exact scope and remaining external ch
 ## Next recommended task — not started
 
 See `docs/handoffs/aaii_checkpoint.md` for acceptance criteria and boundaries.
+Before relying on hosted checks, the account owner must resolve GitHub's billing/
+Actions allowance block and rerun CI. The initial push succeeded; no workflow
+steps ran in the hosted attempt. This is external to the code scope below.
 
 - [ ] Add a synthetic XLS fixture matching the verified provider layout.
 - [ ] Test the bounded successful `live: true` Dagster path with injected HTTP
