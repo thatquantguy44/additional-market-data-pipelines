@@ -15,7 +15,7 @@ to provider-contract verification.
 
 ## Additional positioning and market-structure sources
 
-The following six additions are retained for investigation after the first
+The following seven additions are retained for investigation after the first
 working pipeline slice. They supplement the existing CFTC, FINRA short-sale
 volume, OFR STFM, and SEC fails-to-deliver candidates in the
 [source catalog](catalog/README.md). FINRA venue transparency is distinct from
@@ -33,6 +33,7 @@ authentication, and free access before implementation.
 | `sec-nmfp` | [SEC Form N-MFP](https://www.sec.gov/data-research/sec-markets-data/dera-form-n-mfp-data-sets) | Money-market-fund portfolios; funding exposures and portfolio shifts | Monthly ZIP datasets of flattened filings | Preserve observation, filing, and public availability dates; handle form/schema changes and amendments. |
 | `dtcc-public-swaps` | [DTCC public swap dissemination](https://pddata.dtcc.com/ppd/info-center) | Public swap and security-based-swap transaction data; derivatives-activity research | Public dashboard and reporting downloads | Higher expected engineering effort: verify current download routes, trade lifecycle handling, corrections/cancellations, and reporting conventions before aggregation. |
 | `sec-midas` | [SEC Market Structure Analytics / MIDAS](https://www.sec.gov/featured-topics/market-structure-analytics) | Published market metrics and research datasets; market-quality analysis | Published dataset downloads | Verify each dataset's history and freshness; published extracts do not provide unrestricted access to underlying MIDAS feeds. |
+| `aaii-investor-sentiment` | [AAII Investor Sentiment Survey](https://www.aaii.com/sentiment-survey) | Weekly bullish, neutral, and bearish shares for individual investors; sentiment spread, changes, and historical-percentile research | Official survey results and [historical results/download page](https://www.aaii.com/sentimentsurvey/sent_results); access review required | Verify historical-data membership requirements, cost, permitted automation, and reuse terms; no official public API verified. Preserve survey period and actual publication time; opinion measures are not holdings or trade flows. |
 
 Recommended order for these additions: **NY Fed Primary Dealer Statistics → SEC
 N-MFP → FINRA ATS/non-ATS → OFR Hedge Fund Monitor**. This is a prioritization
@@ -77,7 +78,7 @@ adding connectors.
 
 ## Backlog status and promotion rules
 
-All **13 additional sources** above are recorded as **research candidates**.
+All **14 additional sources** above are recorded as **research candidates**.
 None has an implemented connector, validated live extraction, enabled manifest,
 or scheduled job. Retain the backlog IDs across future specs and handoffs.
 

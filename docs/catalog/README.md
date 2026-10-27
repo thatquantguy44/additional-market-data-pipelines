@@ -5,8 +5,9 @@ candidates, not implemented connectors. “Under-utilized” is a research theme
 adoption and investment usefulness have not been measured. Free access does not
 establish unrestricted redistribution rights. Verify terms for each dataset.
 
-This catalog describes the original four source candidates. The
-[master roadmap and source backlog](../roadmap.md) retains all 13 additional
+This catalog describes the original four source candidates and the AAII
+Investor Sentiment Survey addition. The
+[master roadmap and source backlog](../roadmap.md) retains all 14 additional
 sources discussed, with official links, access methods, potential uses, and
 implementation considerations. The [master handoff](../handoffs/project_bootstrap.md)
 lists the complete inventory and current priorities. All remain unimplemented.
@@ -56,6 +57,29 @@ outstanding failures and that fails can arise from long or short sales. The
 price field can be missing and refers to the preceding day's close.
 
 Source: [SEC data and field definitions](https://www.sec.gov/data-research/sec-markets-data/fails-deliver-data).
+
+## AAII Investor Sentiment Survey
+
+Backlog ID: `aaii-investor-sentiment`. Status: research candidate; access review
+required. AAII reports weekly bullish, neutral, and bearish percentages for
+individual investors' six-month stock-market outlook, with results published on
+Thursdays. The survey dates to 1987. These are stated opinions, not observed
+positions or trade flows.
+
+Potential derived features: bullish-minus-bearish spread in percentage points,
+week-over-week changes, and rolling percentiles using only observations available
+at the calculation cutoff. Predictive usefulness remains a research question.
+
+Start from the official results and historical download pages. AAII describes
+full historical data as a member benefit; verify current membership/cost,
+automation permissions, and reuse terms before treating this as a free source.
+No official public API or live extraction contract has been verified. Preserve
+survey-period labels separately from publication/retrieval timestamps; check
+percentage units, rounding, missing weeks, and revisions when creating fixtures.
+
+Sources: [official survey page](https://www.aaii.com/sentiment-survey),
+[historical results and download page](https://www.aaii.com/sentimentsurvey/sent_results),
+[survey methodology](https://www.aaii.com/latest/article/16502-the-aaii-investor-sentiment-survey).
 
 ## Connector readiness checklist
 

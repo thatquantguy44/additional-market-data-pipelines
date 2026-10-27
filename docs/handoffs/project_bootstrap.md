@@ -15,7 +15,7 @@ guidance, and pinned workflow library. Application code is not implemented.
 The user also requested that every additional source discussed be retained in
 the handoff and roadmap. The [master roadmap](../roadmap.md) is the canonical
 source backlog, with official references, proposed access methods, research
-uses, limitations, and stable backlog IDs for all 13 additions.
+uses, limitations, and stable backlog IDs for all 14 additions.
 
 ## Retained source inventory
 
@@ -32,6 +32,10 @@ Additional positioning and market-structure candidates:
 - `sec-nmfp`: SEC money-market-fund portfolio holdings.
 - `dtcc-public-swaps`: DTCC public swap/security-based-swap dissemination.
 - `sec-midas`: SEC Market Structure Analytics / MIDAS published datasets.
+- `aaii-investor-sentiment`: AAII Investor Sentiment Survey; weekly bullish,
+  neutral, and bearish shares. Access review is required for historical downloads,
+  membership requirements, automation, and reuse terms; free full-history access
+  and an official public API have not been verified.
 
 Later company/holdings candidates:
 
