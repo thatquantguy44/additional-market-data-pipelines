@@ -24,9 +24,7 @@ def run_live(manifest_path, root, *, start, end, dsn=None):
     url = manifest.access["source_url"]
     request = Request(
         url,
-        headers={
-            "User-Agent": "additional-market-data-pipelines/0.1 (bounded research verification)"
-        },
+        headers={"User-Agent": "market-medallion/0.1 (bounded research verification)"},
     )
     with writer_lock(root):
         try:

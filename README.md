@@ -1,4 +1,6 @@
-# additional-market-data-pipelines
+# MarketMedallion
+
+Repository: [market-medallion](https://github.com/thatquantguy44/market-medallion).
 
 Independent, manifest-driven **Bronze → Silver → Gold** pipelines for market
 data. The first executable slice imports an authorized local **AAII Investor
@@ -101,6 +103,8 @@ The verified local service uses `127.0.0.1:55438`, database `additional_market_d
 login `market_data`, effective role `aaii_writer`, and schema `aaii`. Its actual
 settings are in ignored `config/config.yaml`; credentials are in ignored `.env`.
 The checked-in example keeps the generic port 55432 and public schema.
+These database and Docker identifiers are preserved across the repository rename
+so existing volumes and DBeaver connections continue to use the same data.
 
 ## Dagster
 
@@ -147,3 +151,14 @@ exact upstream revision and content checksum in `agents/agent-skills.lock.json`.
 No submodule setup or GitHub refresh is needed. Verify the local snapshot with
 `python3 scripts/verify_agent_skills.py`. This project has no runtime imports,
 secrets, databases, or deployment identifiers inherited from sibling repositories.
+
+## Repository name and local checkout
+
+The project is named **MarketMedallion**; the GitHub repository and Python
+distribution use `market-medallion`. The Python import path
+`market_data_pipeline` and existing `market-data` command remain supported.
+Installing the package also provides the `market-medallion` command.
+
+The local checkout is `pipelines/market-medallion`. The previous checkout path is
+retained as a compatibility symlink for historical absolute Bronze/audit paths
+and existing workspace references. New clones can use the new name directly.

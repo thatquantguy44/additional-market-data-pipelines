@@ -94,3 +94,23 @@ spending-limit issue. This provides no hosted verdict on installation, tests or
 build; the last local full suite passed all 54 tests. The account owner needs to
 resolve the execution allowance before retrying CI. No billing settings, tests,
 or verification gates were changed in response.
+
+## Repository identity update — 2026-10-30
+
+The repository and Python distribution are named `market-medallion`
+(MarketMedallion). The request identifier and documentation use that identity.
+The stable `market_data_pipeline` import path and `market-data` CLI are retained;
+`market-medallion` is an additional CLI entrypoint. Local PostgreSQL, schema,
+roles, Compose project/volume names, archived bytes and historical metadata are
+preserved. The renamed checkout retains a compatibility symlink at the previous
+path for existing absolute references.
+
+Rename verification passed from the new checkout: GitHub reports
+`thatquantguy44/market-medallion`, origin uses its canonical URL, installed
+metadata reports `market-medallion` 0.1.0, and both CLI entrypoints validate the
+manifest. The offline suite passed 53 tests with the isolated PostgreSQL test
+skipped; lint, formatting, dependency checks, source/wheel builds, and workflow
+snapshot integrity passed. Read-only inspection confirmed four live Silver and
+four Gold rows, and all recorded Bronze/file/snapshot paths still resolve. No
+provider data was fetched, and no database, role, port or persistent volume was
+renamed.

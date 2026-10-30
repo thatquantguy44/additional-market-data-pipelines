@@ -1,6 +1,14 @@
-# Master handoff and current pickup point
+# MarketMedallion — master handoff and current pickup point
 
-Last updated: 2026-10-26.
+Last updated: 2026-10-30.
+
+The current repository name is `market-medallion` (MarketMedallion), at
+`https://github.com/thatquantguy44/market-medallion`. The local checkout is
+`pipelines/market-medallion`; the previous checkout path is a compatibility
+symlink for archived absolute paths and existing workspace references. Package
+distribution metadata and the request identifier use the new name. The import
+path remains `market_data_pipeline`, and both CLI names are supported.
+Existing PostgreSQL, roles, Docker projects/volumes and data are preserved.
 
 **Current stopping point:** the first AAII slice, configured PostgreSQL live run,
 and pinned local workflow snapshot are complete. Read

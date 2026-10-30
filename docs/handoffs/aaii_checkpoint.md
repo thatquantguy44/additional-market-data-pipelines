@@ -1,6 +1,8 @@
 # AAII checkpoint and next scoped work
 
-Checkpoint: 2026-10-26, America/New_York. This is a deliberate stopping point:
+Implementation checkpoint: 2026-10-26, America/New_York.
+Repository identity updated 2026-10-30 to **MarketMedallion** (`market-medallion`).
+This is a deliberate stopping point:
 the first AAII slice, configured PostgreSQL live run, and local workflow snapshot
 are complete. Do not resume by rebuilding the scaffold or adding another source.
 
@@ -118,7 +120,7 @@ follow-up records the hosted-CI block below; use `git log` for its revision.
 ### Hosted CI status at push
 
 The initial five-commit series was pushed to `origin/main`. The
-[hosted run](https://github.com/thatquantguy44/additional-market-data-pipelines/actions/runs/40434195208)
+[hosted run](https://github.com/thatquantguy44/market-medallion/actions/runs/40434195208)
 for `c422c5d` failed **before any steps started**: GitHub reported recent account
 payments failed or the Actions spending limit must be increased. This is an
 account-level execution block, not a test or workflow-code failure. Local
@@ -129,6 +131,15 @@ start. A future agent should check that status and retry the workflow after the
 external issue is resolved; do not alter billing or loosen verification gates.
 Once hosted verification can run, the recommended engineering task remains the
 offline bounded live Dagster coverage above. No further feature work was started.
+
+### Repository rename
+
+Use `https://github.com/thatquantguy44/market-medallion.git` for `origin` and
+`pipelines/market-medallion` for the local checkout. The former local directory
+name is a compatibility symlink so historical absolute raw/audit pointers remain
+resolvable. Do not rewrite immutable Bronze metadata or alter the live database
+or volume names to match branding. Both CLI entrypoints and the existing Python
+import path remain valid. The next data-engineering task above is unchanged.
 
 ```bash
 python3 scripts/verify_agent_skills.py
