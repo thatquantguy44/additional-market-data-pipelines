@@ -15,9 +15,10 @@ and pinned local workflow snapshot are complete. Read
 [AAII checkpoint and next scoped work](aaii_checkpoint.md) before implementation.
 The recommended next task is offline end-to-end coverage of the existing bounded
 live Dagster path. It does not add a source or enable a schedule.
-The checkpoint commits were pushed to `origin/main`. Hosted CI could not start
-because GitHub reported an account billing/Actions spending-limit block; 54 tests
-passed locally. See the focused checkpoint for the run link and recovery step.
+The checkpoint and repository rename were pushed to `origin/main`. Hosted CI
+for rename commit `88e0354` passed all 54 tests, snapshot verification, lint,
+formatting and package builds on 2026-10-30. The earlier account-level execution
+block no longer prevents verification. The focused checkpoint links the run.
 
 The workflow library is now a complete local snapshot at `agents/agent-skills/`,
 pinned by `agents/agent-skills.lock.json` to revision

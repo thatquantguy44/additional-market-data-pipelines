@@ -29,9 +29,9 @@ See `docs/development/verification.md` for exact scope and remaining external ch
 ## Next recommended task — not started
 
 See `docs/handoffs/aaii_checkpoint.md` for acceptance criteria and boundaries.
-Before relying on hosted checks, the account owner must resolve GitHub's billing/
-Actions allowance block and rerun CI. The initial push succeeded; no workflow
-steps ran in the hosted attempt. This is external to the code scope below.
+Hosted verification now passes: the 2026-10-30 rename run for `88e0354` completed
+all 54 tests, snapshot integrity, lint/formatting and package builds. The earlier
+account-level execution block no longer prevents the next scope from starting.
 
 - [ ] Add a synthetic XLS fixture matching the verified provider layout.
 - [ ] Test the bounded successful `live: true` Dagster path with injected HTTP

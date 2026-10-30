@@ -114,3 +114,9 @@ snapshot integrity passed. Read-only inspection confirmed four live Silver and
 four Gold rows, and all recorded Bronze/file/snapshot paths still resolve. No
 provider data was fetched, and no database, role, port or persistent volume was
 renamed.
+
+Hosted verification also passed for rename commit `88e0354` on 2026-10-30:
+[GitHub Actions run 41113974074](https://github.com/thatquantguy44/market-medallion/actions/runs/41113974074).
+The hosted job passed all 54 tests, including isolated PostgreSQL integration,
+snapshot verification, lint/formatting, and source/wheel builds. This supersedes
+the original account-level execution block; no billing settings were changed.

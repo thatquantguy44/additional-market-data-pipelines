@@ -117,7 +117,7 @@ The first four checkpoint commits are `73f38d7` (local workflow snapshot),
 (CI). `c422c5d` contains the main documentation checkpoint. A final documentation
 follow-up records the hosted-CI block below; use `git log` for its revision.
 
-### Hosted CI status at push
+### Hosted CI status at the original 2026-10-26 push
 
 The initial five-commit series was pushed to `origin/main`. The
 [hosted run](https://github.com/thatquantguy44/market-medallion/actions/runs/40434195208)
@@ -126,11 +126,10 @@ payments failed or the Actions spending limit must be increased. This is an
 account-level execution block, not a test or workflow-code failure. Local
 verification remains 54 passing tests; do not describe hosted CI as passing.
 
-The account owner must resolve billing/Actions allowance before a hosted run can
-start. A future agent should check that status and retry the workflow after the
-external issue is resolved; do not alter billing or loosen verification gates.
-Once hosted verification can run, the recommended engineering task remains the
-offline bounded live Dagster coverage above. No further feature work was started.
+This was the execution status at the original checkpoint, not a code failure.
+The successful 2026-10-30 rename run below supersedes the execution block. No
+billing settings or verification gates were changed by the agent. The recommended
+engineering task remains the offline bounded live Dagster coverage above.
 
 ### Repository rename
 
@@ -153,3 +152,9 @@ dedicated test database, the last complete suite had 54 passing tests. Creating 
 new test database is described in the development guide. Do not start with a new
 live fetch, overwrite local configuration, reset a persistent volume, or enable
 a recurring download; recurring entitlement and reuse review remain open.
+
+Hosted verification for rename commit `88e0354` passed on 2026-10-30:
+[run 41113974074](https://github.com/thatquantguy44/market-medallion/actions/runs/41113974074).
+All 54 tests (including PostgreSQL), the local snapshot check, lint/formatting,
+and source/wheel builds succeeded. The next scoped task can resume directly;
+there is no outstanding CI-execution prerequisite at this checkpoint.
