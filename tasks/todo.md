@@ -41,3 +41,12 @@ account-level execution block no longer prevents the next scope from starting.
 - [ ] Cover a correction/as-of query and a blocking failure; keep schedules stopped.
 - [ ] Run offline checks and isolated PostgreSQL integration, update verification,
   and stop without expanding provider or deployment scope.
+
+## Authorized AAII completion (Spec 003)
+
+- [ ] Synthetic XLS and full offline Dagster integration.
+- [ ] Weekly window, bounded retries, freshness/status and gated stopped schedule.
+- [ ] Explicit historical backfill with DQ quarantine and deterministic replay.
+- [ ] Owned-table/Bronze backups, empty-target restore and safe snapshot retention.
+- [ ] Isolated PostgreSQL verification, documentation, commits and branch push.
+- [ ] Follow-on CFTC branch after AAII completion (separate scope, not implemented here).
