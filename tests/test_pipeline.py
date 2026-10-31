@@ -6,9 +6,9 @@ from pathlib import Path
 import pyarrow.parquet as pq
 import pytest
 
-from market_data_pipeline.io.warehouse import Warehouse
-from market_data_pipeline.pipeline import export, run
-from market_data_pipeline.replay import replay
+from market_data_pipeline.aaii.io.warehouse import Warehouse
+from market_data_pipeline.aaii.pipeline import export, run
+from market_data_pipeline.aaii.replay import replay
 
 MANIFEST = Path("manifests/aaii-investor-sentiment.yml")
 FIXTURE = Path("tests/fixtures/aaii/sentiment.csv")
@@ -67,7 +67,7 @@ def test_invalid_capture_keeps_raw_and_cannot_replace_parquet(tmp_path):
 
 
 def test_export_failure_is_partial_and_repairable(tmp_path, monkeypatch):
-    import market_data_pipeline.pipeline as pipeline
+    import market_data_pipeline.aaii.pipeline as pipeline
 
     def fail(*args):
         raise OSError("simulated disk full")
@@ -153,8 +153,8 @@ def test_partial_parquet_generation_never_changes_current_pointer(tmp_path, monk
 
 
 def test_reported_date_contract_cannot_silently_mix_with_existing_survey_dates(tmp_path):
+    from market_data_pipeline.aaii.io.bronze import load_archive
     from market_data_pipeline.aaii.manifest import load_manifest
-    from market_data_pipeline.io.bronze import load_archive
 
     run(FIXTURE, MANIFEST, tmp_path, captured_at=at(26))
     envelope, _ = load_archive(next((tmp_path / "bronze").rglob("metadata.json")).parent)

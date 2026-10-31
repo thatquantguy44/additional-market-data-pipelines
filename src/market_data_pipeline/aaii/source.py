@@ -12,9 +12,9 @@ from urllib.request import Request, urlopen
 import certifi
 
 from market_data_pipeline.aaii.data.xls import selection
+from market_data_pipeline.aaii.io.bronze import archive
 from market_data_pipeline.aaii.manifest import load_manifest
-from market_data_pipeline.io.bronze import archive
-from market_data_pipeline.pipeline import MAX_INPUT_BYTES, promote_capture
+from market_data_pipeline.aaii.pipeline import MAX_INPUT_BYTES, promote_capture
 from market_data_pipeline.shared.files import atomic_json, utc_timestamp, writer_lock
 
 

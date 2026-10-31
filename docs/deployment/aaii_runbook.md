@@ -33,7 +33,7 @@ include `gap_days`. Percentiles and rolling windows are not implemented.
 ```python
 from pathlib import Path
 import pyarrow.parquet as pq
-from market_data_pipeline.io.parquet import current_snapshot
+from market_data_pipeline.aaii.io.parquet import current_snapshot
 
 snapshot = current_snapshot(Path("data/aaii"))
 silver = pq.read_table(snapshot / "silver.parquet")
@@ -188,7 +188,7 @@ Open `notebooks/publish_aaii_delta.py` and set the `snapshot`, `catalog`, and
 
 ```python
 from pathlib import Path
-from market_data_pipeline.io.databricks import publish_delta
+from market_data_pipeline.aaii.io.databricks import publish_delta
 
 publish_delta(
     spark,

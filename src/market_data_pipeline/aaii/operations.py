@@ -5,8 +5,8 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from market_data_pipeline.io.parquet import current_snapshot
-from market_data_pipeline.io.warehouse import Warehouse
+from market_data_pipeline.aaii.io.parquet import current_snapshot
+from market_data_pipeline.aaii.io.warehouse import Warehouse
 
 
 def weekly_window(now: datetime, overlap_days: int = 28) -> tuple[str, str]:

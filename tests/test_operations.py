@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from market_data_pipeline.operations import health_report, weekly_window
-from market_data_pipeline.pipeline import run
+from market_data_pipeline.aaii.operations import health_report, weekly_window
+from market_data_pipeline.aaii.pipeline import run
 
 
 def test_weekly_window_uses_new_york_date_and_bounded_overlap():
@@ -35,7 +35,7 @@ def test_freshness_reports_missing_stale_and_failed_state(tmp_path):
 
 
 def test_transient_retry_archives_each_http_response_without_duplicate_versions(tmp_path):
-    from market_data_pipeline.sources.aaii import run_live
+    from market_data_pipeline.aaii.source import run_live
 
     data = Path("tests/fixtures/aaii/synthetic.xls").read_bytes()
     sleeps = []
@@ -69,7 +69,7 @@ def test_transient_retry_archives_each_http_response_without_duplicate_versions(
 def test_live_schedule_is_stopped_and_skips_without_access_ack(monkeypatch):
     import dagster as dg
 
-    from market_data_pipeline.orchestration.dagster_defs import live_schedule
+    from market_data_pipeline.aaii.dagster_defs import live_schedule
 
     monkeypatch.delenv("MARKET_MEDALLION_CONFIG", raising=False)
     assert live_schedule.default_status == dg.DefaultScheduleStatus.STOPPED
@@ -80,7 +80,7 @@ def test_live_schedule_is_stopped_and_skips_without_access_ack(monkeypatch):
 def test_transport_failure_makes_recent_data_unhealthy_until_next_success(tmp_path):
     from urllib.error import URLError
 
-    from market_data_pipeline.sources.aaii import run_live
+    from market_data_pipeline.aaii.source import run_live
 
     fixture = Path("tests/fixtures/aaii/synthetic.xls")
     manifest = Path("manifests/aaii-investor-sentiment-xls.yml")
@@ -123,7 +123,7 @@ def test_transport_failure_makes_recent_data_unhealthy_until_next_success(tmp_pa
 def test_schedule_requires_configured_ack_then_uses_dynamic_overlap(tmp_path, monkeypatch):
     import dagster as dg
 
-    from market_data_pipeline.orchestration.dagster_defs import live_schedule
+    from market_data_pipeline.aaii.dagster_defs import live_schedule
 
     config = tmp_path / "runtime.yml"
     config.write_text("warehouse: sqlite\noperations:\n  scheduled_live_access: false\n")
@@ -142,7 +142,7 @@ def test_schedule_requires_configured_ack_then_uses_dynamic_overlap(tmp_path, mo
 
 
 def test_retry_after_long_wait_is_not_shortened(tmp_path):
-    from market_data_pipeline.sources.aaii import run_live
+    from market_data_pipeline.aaii.source import run_live
 
     class Response(io.BytesIO):
         code = 429

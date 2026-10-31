@@ -4,10 +4,10 @@ from pathlib import Path
 
 from market_data_pipeline.aaii.data.csv import normalize
 from market_data_pipeline.aaii.data.xls import normalize_xls, selection
+from market_data_pipeline.aaii.io.bronze import archive
+from market_data_pipeline.aaii.io.parquet import publish
+from market_data_pipeline.aaii.io.warehouse import Warehouse
 from market_data_pipeline.aaii.manifest import load_manifest
-from market_data_pipeline.io.bronze import archive
-from market_data_pipeline.io.parquet import publish
-from market_data_pipeline.io.warehouse import Warehouse
 from market_data_pipeline.shared.files import atomic_json, writer_lock
 
 logger = logging.getLogger(__name__)

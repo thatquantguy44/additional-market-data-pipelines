@@ -2,10 +2,10 @@ import json
 import shutil
 from pathlib import Path
 
+from market_data_pipeline.aaii.io.bronze import load_archive
+from market_data_pipeline.aaii.io.warehouse import Warehouse
 from market_data_pipeline.aaii.manifest import manifest_from_dict
-from market_data_pipeline.io.bronze import load_archive
-from market_data_pipeline.io.warehouse import Warehouse
-from market_data_pipeline.pipeline import promote_capture
+from market_data_pipeline.aaii.pipeline import promote_capture
 from market_data_pipeline.shared.files import writer_lock
 
 
