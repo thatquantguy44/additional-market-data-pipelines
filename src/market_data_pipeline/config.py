@@ -7,7 +7,7 @@ from pathlib import Path
 
 import yaml
 
-from market_data_pipeline.catalogs.manifest import UniqueLoader
+from market_data_pipeline.shared.yaml import UniqueLoader
 
 
 @dataclass(frozen=True)

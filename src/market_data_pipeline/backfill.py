@@ -3,10 +3,11 @@
 from datetime import UTC, datetime
 from pathlib import Path
 
-from market_data_pipeline.catalogs.manifest import load_manifest
-from market_data_pipeline.data.aaii_xls import selection
-from market_data_pipeline.io.bronze import archive, writer_lock
+from market_data_pipeline.aaii.data.xls import selection
+from market_data_pipeline.aaii.manifest import load_manifest
+from market_data_pipeline.io.bronze import archive
 from market_data_pipeline.pipeline import MAX_INPUT_BYTES, promote_capture
+from market_data_pipeline.shared.files import writer_lock
 
 
 def backfill(

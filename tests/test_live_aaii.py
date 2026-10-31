@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from market_data_pipeline.catalogs.manifest import load_manifest
-from market_data_pipeline.data.aaii_xls import normalize_rows, selection
+from market_data_pipeline.aaii.data.xls import normalize_rows, selection
+from market_data_pipeline.aaii.manifest import load_manifest
 
 MANIFEST = Path("manifests/aaii-investor-sentiment-xls.yml")
 

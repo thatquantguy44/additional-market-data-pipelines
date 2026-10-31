@@ -8,9 +8,9 @@ import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 
-from market_data_pipeline.io.bronze import atomic_json, utc_timestamp, writer_lock
 from market_data_pipeline.io.parquet import current_snapshot, publish
 from market_data_pipeline.io.warehouse import GOLD_COLUMNS, RUN_COLUMNS, SILVER_COLUMNS, Warehouse
+from market_data_pipeline.shared.files import atomic_json, utc_timestamp, writer_lock
 
 
 def _inventory(root):

@@ -153,7 +153,7 @@ def test_partial_parquet_generation_never_changes_current_pointer(tmp_path, monk
 
 
 def test_reported_date_contract_cannot_silently_mix_with_existing_survey_dates(tmp_path):
-    from market_data_pipeline.catalogs.manifest import load_manifest
+    from market_data_pipeline.aaii.manifest import load_manifest
     from market_data_pipeline.io.bronze import load_archive
 
     run(FIXTURE, MANIFEST, tmp_path, captured_at=at(26))
@@ -161,7 +161,7 @@ def test_reported_date_contract_cannot_silently_mix_with_existing_survey_dates(t
     envelope["manifest"]["date_basis"] = "reported_date"
     envelope["run_id"] = "f" * 32
     envelope["retrieved_at"] = "2026-10-27T00:00:00.000000Z"
-    from market_data_pipeline.data.aaii import normalize
+    from market_data_pipeline.aaii.data.csv import normalize
 
     with Warehouse(tmp_path) as warehouse:
         warehouse.record_run(envelope, "not-promoted")
