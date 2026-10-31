@@ -93,6 +93,8 @@ def test_postgres_owned_state_backup_restores_to_an_empty_isolated_schema(tmp_pa
     )
     package = tmp_path / "backup"
     backup(root, package, dsn=source_dsn)
+    with pytest.raises(ValueError, match="empty warehouse"):
+        restore(package, tmp_path / "occupied", dsn=source_dsn)
     restored = tmp_path / "restored"
     restore(package, restored, dsn=target_dsn)
     with Warehouse(root, source_dsn) as source, Warehouse(restored, target_dsn) as target:

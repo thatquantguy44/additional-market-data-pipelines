@@ -98,13 +98,17 @@ def restore(package: Path, destination: Path, *, dsn=None) -> dict:
         ):
             raise ValueError("invalid backup run identity")
     with writer_lock(destination), Warehouse(destination, dsn) as warehouse:
-        if warehouse.versions() or warehouse.runs():
-            raise ValueError("restore requires an empty warehouse")
-        if (package / "bronze").exists():
-            shutil.copytree(package / "bronze", destination / "bronze")
         with warehouse.transaction():
-            warehouse.execute("DELETE FROM pipeline_dataset_contract")
-
+            # Check while holding the database writer lock, before copying or inserting.
+            if (
+                warehouse.versions()
+                or warehouse.runs()
+                or warehouse.execute("SELECT 1 FROM aaii_gold_latest LIMIT 1").fetchone()
+                or warehouse.execute("SELECT 1 FROM pipeline_dataset_contract LIMIT 1").fetchone()
+            ):
+                raise ValueError("restore requires an empty warehouse")
+            if (package / "bronze").exists():
+                shutil.copytree(package / "bronze", destination / "bronze")
             for contract in state["contracts"]:
                 warehouse.execute(
                     "INSERT INTO pipeline_dataset_contract (dataset,date_basis) VALUES (?,?)",
