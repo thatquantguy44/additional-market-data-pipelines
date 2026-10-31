@@ -7,7 +7,7 @@ import io
 from datetime import date
 from decimal import Decimal
 
-from market_data_pipeline.aaii.data.csv import Sentiment, _share
+from market_data_pipeline.pipelines.aaii.data.csv import Sentiment, _share
 
 PARSER_VERSION = "aaii-xls-v1"
 

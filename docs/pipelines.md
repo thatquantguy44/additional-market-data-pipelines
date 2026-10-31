@@ -16,13 +16,13 @@ are on `feature/pipeline-completion`. CFTC TFF futures-only is next on a separat
 branch after AAII review/merge. The FX and web-traffic drafts do not silently
 change the CFTC → FINRA short-sale volume → OFR STFM sequence.
 
-| Pipeline ID | Purpose | Status | Package under `src/market_data_pipeline/` | Contract / evidence | Next scoped work |
+| Pipeline ID | Purpose | Status | Package under `src/market_data_pipeline/pipelines/` | Contract / evidence | Next scoped work |
 | --- | --- | --- | --- | --- | --- |
-| `aaii-investor-sentiment` | Weekly investor sentiment shares and bull/bear spread | Implemented locally; recurring acquisition gated | [`aaii/`](../src/market_data_pipeline/aaii/) | [Spec 002](../specs/spec002/README.md), [Spec 003](../specs/spec003/README.md), [checkpoint](handoffs/aaii_checkpoint.md), [runbook](deployment/aaii_runbook.md) | Review/merge completion; establish recurring access and production operations before scheduling. |
+| `aaii-investor-sentiment` | Weekly investor sentiment shares and bull/bear spread | Implemented locally; recurring acquisition gated | [`aaii/`](../src/market_data_pipeline/pipelines/aaii/) | [Spec 002](../specs/spec002/README.md), [Spec 003](../specs/spec003/README.md), [checkpoint](handoffs/aaii_checkpoint.md), [runbook](deployment/aaii_runbook.md) | Review/merge completion; establish recurring access and production operations before scheduling. |
 | `cftc-cot` | Trader positioning, starting with TFF futures-only | Planned; next implementation | Proposed `cftc/`; absent | [Spec 001](../specs/spec001/README.md), [catalog](catalog/README.md#cftc) | Verify official access/schema/publication contract and write a new numbered implementation spec on its own branch. |
 | `finra-short-sale-volume` | Facility-scoped short-sale volume and matched denominators | Planned | Proposed `finra_short_sale_volume/`; absent | [Spec 001](../specs/spec001/README.md), [catalog](catalog/README.md#finra) | Confirm current extraction route, scope, terms and fixtures after CFTC. |
 | `ofr-stfm` | Short-term funding and repo measures | Planned | Proposed `ofr_stfm/`; absent | [Spec 001](../specs/spec001/README.md), [catalog](catalog/README.md#ofr) | Select series from metadata and verify provenance/units before implementation. |
-| `ecb-fx-reference` | Daily official FX reference rates, ECB first | Initial scope accepted; no connector | Proposed `fx_reference_rates/`; absent | [Spec 004](../specs/spec004/README.md): nine quote currencies, confirmed 1999-01-01 backfill start where available, lossless source precision | Verify provider contract and plan an offline slice; coordinate shared changes with AAII. |
+| `ecb-fx-reference` | Daily official FX reference rates, ECB first | Existing MacroMedallion coverage confirmed; no local connector | Proposed `fx_reference_rates/`; absent and deferred | [Spec 004](../specs/spec004/README.md), [overlap/gap review](reviews/spec004_macro_medallion/README.md): all nine currencies already stored upstream | Keep ECB ingestion in MacroMedallion; prioritize captured revisions/as-of/replay, exact values/metadata, then FX Gold outputs there. |
 | `company-web-traffic` | Company/competitor website visit estimates | Draft; acquisition source unresolved | Proposed `company_web_traffic/`; absent | [Spec 005](../specs/spec005/README.md) | Verify a suitable free source first; paid Similarweb is an optional later decision. |
 
 The [specification index](../specs/README.md) records the FX/web contracts and
@@ -78,9 +78,10 @@ local runtime config, passwords and backup packages remain outside Git.
 ## Package ownership and maintenance
 
 Every implemented pipeline gets its own Python subpackage immediately beneath
-`src/market_data_pipeline/`, using a valid snake_case name. Its manifest contract,
-parsers, transforms, acquisition, tables, publication, recovery, CLI and scheduler
-assets belong there. Only provider-independent helpers belong in `shared/`.
+`src/market_data_pipeline/pipelines/`, using a valid snake_case name. New provider
+packages must not be created directly under `src/market_data_pipeline/`. Each
+pipeline owns its manifest contract, parsers, transforms, acquisition, tables,
+publication, recovery, CLI and scheduler assets. Only provider-independent helpers belong in `shared/`.
 See the [layout and import migration guide](development/pipeline_layout.md).
 
 Update this register whenever a pipeline is added, scoped, implemented, deployed

@@ -3,10 +3,10 @@
 from datetime import UTC, datetime
 from pathlib import Path
 
-from market_data_pipeline.aaii.data.xls import selection
-from market_data_pipeline.aaii.io.bronze import archive
-from market_data_pipeline.aaii.manifest import load_manifest
-from market_data_pipeline.aaii.pipeline import MAX_INPUT_BYTES, promote_capture
+from market_data_pipeline.pipelines.aaii.data.xls import selection
+from market_data_pipeline.pipelines.aaii.io.bronze import archive
+from market_data_pipeline.pipelines.aaii.manifest import load_manifest
+from market_data_pipeline.pipelines.aaii.pipeline import MAX_INPUT_BYTES, promote_capture
 from market_data_pipeline.shared.files import writer_lock
 
 

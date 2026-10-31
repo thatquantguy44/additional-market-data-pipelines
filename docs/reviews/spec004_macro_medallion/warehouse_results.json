@@ -1,0 +1,431 @@
+[
+  {
+    "section": "snapshot",
+    "captured_at_utc": "2026-10-31T02:17:58.161652+00:00",
+    "transaction_read_only": "on",
+    "isolation": "repeatable read",
+    "total_ecb_fx_series": 17
+  },
+  {
+    "section": "silver_profile",
+    "rows": [
+      {
+        "series_id": "ECB:EXR:D.AUD.EUR.SP00.A",
+        "stored_rows": 7278,
+        "dates": 7188,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-30",
+        "blank_vintage_rows": 129,
+        "null_value_rows": 62,
+        "missing_raw_text_rows": 0,
+        "first_retained_capture": "2026-08-22T19:38:15.934337+00:00",
+        "last_retained_capture": "2026-10-31T02:13:23.093422+00:00"
+      },
+      {
+        "series_id": "ECB:EXR:D.CAD.EUR.SP00.A",
+        "stored_rows": 7278,
+        "dates": 7188,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-30",
+        "blank_vintage_rows": 129,
+        "null_value_rows": 62,
+        "missing_raw_text_rows": 0,
+        "first_retained_capture": "2026-08-22T19:38:15.787942+00:00",
+        "last_retained_capture": "2026-10-31T02:13:19.682832+00:00"
+      },
+      {
+        "series_id": "ECB:EXR:D.CHF.EUR.SP00.A",
+        "stored_rows": 7278,
+        "dates": 7188,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-30",
+        "blank_vintage_rows": 129,
+        "null_value_rows": 62,
+        "missing_raw_text_rows": 0,
+        "first_retained_capture": "2026-08-22T19:38:13.170146+00:00",
+        "last_retained_capture": "2026-10-31T02:13:13.578958+00:00"
+      },
+      {
+        "series_id": "ECB:EXR:D.GBP.EUR.SP00.A",
+        "stored_rows": 7278,
+        "dates": 7188,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-30",
+        "blank_vintage_rows": 129,
+        "null_value_rows": 62,
+        "missing_raw_text_rows": 0,
+        "first_retained_capture": "2026-08-22T19:38:11.475295+00:00",
+        "last_retained_capture": "2026-10-31T02:13:07.894594+00:00"
+      },
+      {
+        "series_id": "ECB:EXR:D.JPY.EUR.SP00.A",
+        "stored_rows": 7278,
+        "dates": 7188,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-30",
+        "blank_vintage_rows": 129,
+        "null_value_rows": 62,
+        "missing_raw_text_rows": 0,
+        "first_retained_capture": "2026-08-22T19:38:11.873254+00:00",
+        "last_retained_capture": "2026-10-31T02:13:11.183767+00:00"
+      },
+      {
+        "series_id": "ECB:EXR:D.NOK.EUR.SP00.A",
+        "stored_rows": 7278,
+        "dates": 7188,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-30",
+        "blank_vintage_rows": 129,
+        "null_value_rows": 62,
+        "missing_raw_text_rows": 0,
+        "first_retained_capture": "2026-08-23T01:27:58.553878+00:00",
+        "last_retained_capture": "2026-10-31T02:13:26.232328+00:00"
+      },
+      {
+        "series_id": "ECB:EXR:D.NZD.EUR.SP00.A",
+        "stored_rows": 7278,
+        "dates": 7188,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-30",
+        "blank_vintage_rows": 129,
+        "null_value_rows": 62,
+        "missing_raw_text_rows": 0,
+        "first_retained_capture": "2026-08-23T01:28:02.049071+00:00",
+        "last_retained_capture": "2026-10-31T02:13:35.037005+00:00"
+      },
+      {
+        "series_id": "ECB:EXR:D.SEK.EUR.SP00.A",
+        "stored_rows": 7278,
+        "dates": 7188,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-30",
+        "blank_vintage_rows": 129,
+        "null_value_rows": 62,
+        "missing_raw_text_rows": 0,
+        "first_retained_capture": "2026-08-23T01:27:59.695915+00:00",
+        "last_retained_capture": "2026-10-31T02:13:29.308649+00:00"
+      },
+      {
+        "series_id": "ECB:EXR:D.USD.EUR.SP00.A",
+        "stored_rows": 7278,
+        "dates": 7188,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-30",
+        "blank_vintage_rows": 129,
+        "null_value_rows": 62,
+        "missing_raw_text_rows": 0,
+        "first_retained_capture": "2026-08-22T19:38:10.597677+00:00",
+        "last_retained_capture": "2026-10-31T02:13:05.388200+00:00"
+      }
+    ]
+  },
+  {
+    "section": "vintage_overlap",
+    "rows": [
+      {
+        "series_id": "ECB:EXR:D.AUD.EUR.SP00.A",
+        "multi_key_dates": 90,
+        "differing_raw_dates": 0,
+        "mixed_vintage_dates": 90
+      },
+      {
+        "series_id": "ECB:EXR:D.CAD.EUR.SP00.A",
+        "multi_key_dates": 90,
+        "differing_raw_dates": 0,
+        "mixed_vintage_dates": 90
+      },
+      {
+        "series_id": "ECB:EXR:D.CHF.EUR.SP00.A",
+        "multi_key_dates": 90,
+        "differing_raw_dates": 0,
+        "mixed_vintage_dates": 90
+      },
+      {
+        "series_id": "ECB:EXR:D.GBP.EUR.SP00.A",
+        "multi_key_dates": 90,
+        "differing_raw_dates": 0,
+        "mixed_vintage_dates": 90
+      },
+      {
+        "series_id": "ECB:EXR:D.JPY.EUR.SP00.A",
+        "multi_key_dates": 90,
+        "differing_raw_dates": 0,
+        "mixed_vintage_dates": 90
+      },
+      {
+        "series_id": "ECB:EXR:D.NOK.EUR.SP00.A",
+        "multi_key_dates": 90,
+        "differing_raw_dates": 0,
+        "mixed_vintage_dates": 90
+      },
+      {
+        "series_id": "ECB:EXR:D.NZD.EUR.SP00.A",
+        "multi_key_dates": 90,
+        "differing_raw_dates": 0,
+        "mixed_vintage_dates": 90
+      },
+      {
+        "series_id": "ECB:EXR:D.SEK.EUR.SP00.A",
+        "multi_key_dates": 90,
+        "differing_raw_dates": 0,
+        "mixed_vintage_dates": 90
+      },
+      {
+        "series_id": "ECB:EXR:D.USD.EUR.SP00.A",
+        "multi_key_dates": 90,
+        "differing_raw_dates": 0,
+        "mixed_vintage_dates": 90
+      }
+    ]
+  },
+  {
+    "section": "capture_cutoff",
+    "series": "ECB:EXR:D.USD.EUR.SP00.A",
+    "cutoff": "2026-08-01T23:59:59+00:00",
+    "provider_date_eligible_rows": 7190,
+    "captured_by_cutoff_rows": 0
+  },
+  {
+    "section": "derived_feature_inventory",
+    "rows": [
+      {
+        "feature_name": "debt_to_gdp",
+        "rows": 133
+      },
+      {
+        "feature_name": "macro_activity_index",
+        "rows": 1052
+      },
+      {
+        "feature_name": "real_yield_10y",
+        "rows": 5955
+      }
+    ]
+  },
+  {
+    "section": "schema",
+    "rows": [
+      {
+        "table_schema": "gold",
+        "table_name": "fred_cross_series_feature",
+        "column_name": "feature_name",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "gold",
+        "table_name": "fred_cross_series_feature",
+        "column_name": "op",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "gold",
+        "table_name": "fred_cross_series_feature",
+        "column_name": "observation_date",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "gold",
+        "table_name": "fred_cross_series_feature",
+        "column_name": "value",
+        "data_type": "double precision"
+      },
+      {
+        "table_schema": "gold",
+        "table_name": "fred_point_in_time",
+        "column_name": "series_id",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "gold",
+        "table_name": "fred_point_in_time",
+        "column_name": "observation_date",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "gold",
+        "table_name": "fred_point_in_time",
+        "column_name": "realtime_start",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "gold",
+        "table_name": "fred_point_in_time",
+        "column_name": "realtime_end",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "gold",
+        "table_name": "fred_point_in_time",
+        "column_name": "value",
+        "data_type": "double precision"
+      },
+      {
+        "table_schema": "gold",
+        "table_name": "fred_point_in_time",
+        "column_name": "revision_number",
+        "data_type": "bigint"
+      },
+      {
+        "table_schema": "gold",
+        "table_name": "fred_point_in_time",
+        "column_name": "is_missing",
+        "data_type": "bigint"
+      },
+      {
+        "table_schema": "gold",
+        "table_name": "fred_point_in_time",
+        "column_name": "ingested_at",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "silver",
+        "table_name": "fred_observation",
+        "column_name": "source",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "silver",
+        "table_name": "fred_observation",
+        "column_name": "series_id",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "silver",
+        "table_name": "fred_observation",
+        "column_name": "observation_date",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "silver",
+        "table_name": "fred_observation",
+        "column_name": "realtime_start",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "silver",
+        "table_name": "fred_observation",
+        "column_name": "realtime_end",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "silver",
+        "table_name": "fred_observation",
+        "column_name": "value",
+        "data_type": "double precision"
+      },
+      {
+        "table_schema": "silver",
+        "table_name": "fred_observation",
+        "column_name": "raw_value",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "silver",
+        "table_name": "fred_observation",
+        "column_name": "is_missing",
+        "data_type": "bigint"
+      },
+      {
+        "table_schema": "silver",
+        "table_name": "fred_observation",
+        "column_name": "row_hash",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "silver",
+        "table_name": "fred_observation",
+        "column_name": "revision_number",
+        "data_type": "bigint"
+      },
+      {
+        "table_schema": "silver",
+        "table_name": "fred_observation",
+        "column_name": "ingested_at",
+        "data_type": "text"
+      },
+      {
+        "table_schema": "silver",
+        "table_name": "fred_observation",
+        "column_name": "run_id",
+        "data_type": "text"
+      }
+    ]
+  },
+  {
+    "section": "gold_latest_profile",
+    "rows": [
+      {
+        "series_id": "ECB:EXR:D.AUD.EUR.SP00.A",
+        "latest_dates": 7182,
+        "null_latest_dates": 62,
+        "nonpositive_latest_dates": 0,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-22"
+      },
+      {
+        "series_id": "ECB:EXR:D.CAD.EUR.SP00.A",
+        "latest_dates": 7182,
+        "null_latest_dates": 62,
+        "nonpositive_latest_dates": 0,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-22"
+      },
+      {
+        "series_id": "ECB:EXR:D.CHF.EUR.SP00.A",
+        "latest_dates": 7182,
+        "null_latest_dates": 62,
+        "nonpositive_latest_dates": 0,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-22"
+      },
+      {
+        "series_id": "ECB:EXR:D.GBP.EUR.SP00.A",
+        "latest_dates": 7182,
+        "null_latest_dates": 62,
+        "nonpositive_latest_dates": 0,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-22"
+      },
+      {
+        "series_id": "ECB:EXR:D.JPY.EUR.SP00.A",
+        "latest_dates": 7182,
+        "null_latest_dates": 62,
+        "nonpositive_latest_dates": 0,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-22"
+      },
+      {
+        "series_id": "ECB:EXR:D.NOK.EUR.SP00.A",
+        "latest_dates": 7182,
+        "null_latest_dates": 62,
+        "nonpositive_latest_dates": 0,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-22"
+      },
+      {
+        "series_id": "ECB:EXR:D.NZD.EUR.SP00.A",
+        "latest_dates": 7182,
+        "null_latest_dates": 62,
+        "nonpositive_latest_dates": 0,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-22"
+      },
+      {
+        "series_id": "ECB:EXR:D.SEK.EUR.SP00.A",
+        "latest_dates": 7182,
+        "null_latest_dates": 62,
+        "nonpositive_latest_dates": 0,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-22"
+      },
+      {
+        "series_id": "ECB:EXR:D.USD.EUR.SP00.A",
+        "latest_dates": 7182,
+        "null_latest_dates": 62,
+        "nonpositive_latest_dates": 0,
+        "first_date": "1999-01-04",
+        "last_date": "2026-10-22"
+      }
+    ]
+  }
+]

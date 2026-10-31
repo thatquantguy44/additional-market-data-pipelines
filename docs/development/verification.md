@@ -1,5 +1,8 @@
 # AAII slice verification
 
+The latest package placement and checks are in the final **Pipelines namespace**
+section. Earlier sections record historical layouts and verification runs.
+
 Initial slice verified 2026-10-26 (America/New_York), Python 3.12 on macOS.
 The Spec 003 completion results below supersede these initial counts/state.
 
@@ -241,3 +244,27 @@ The external checkout's unrelated uncommitted drafts remain outside that pin.
 No dependencies, application code, data, schedules, external library files or
 vendored snapshot contents changed. Separate roadmap/FX/web specification drafts
 remain untouched.
+
+
+## Pipelines namespace — 2026-10-30 America/New_York
+
+AAII now lives under `src/market_data_pipeline/pipelines/aaii/`, imported as
+`market_data_pipeline.pipelines.aaii`. This supersedes the direct `aaii/` layout
+recorded above. Future implementations must use a separate snake_case subpackage
+under `src/market_data_pipeline/pipelines/`; root agent guidance, the register,
+layout guide, handoffs and planned FX/web-traffic paths all specify this rule.
+
+- Offline suite: **72 passed, two PostgreSQL tests skipped**; no dedicated
+  PostgreSQL test DSN was supplied for this package-only move. Both root and
+  pipeline module CLI flows and the root Dagster forwarding remain covered.
+- Repository-wide Ruff lint/formatting, dependency check and source/wheel builds
+  passed. All 21 moved Python modules have identical behavior trees after
+  excluding import statements.
+- The clean wheel contains `pipelines/aaii/` and no former direct `aaii/` package.
+  In isolated Python subprocesses outside the checkout, both module CLIs validate
+  the manifest and import/publish the two-row synthetic fixture. Root and
+  pipeline-owned Dagster definitions resolve to the same object from the wheel.
+
+Only source placement, imports and documentation changed. Stored payloads,
+identifiers, parser versions, tables and schedules retain their existing contracts.
+No provider request, live warehouse write or recurring schedule was involved.

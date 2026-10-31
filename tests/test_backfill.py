@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from market_data_pipeline.aaii.backfill import backfill
-from market_data_pipeline.aaii.io.warehouse import Warehouse
-from market_data_pipeline.aaii.replay import replay
+from market_data_pipeline.pipelines.aaii.backfill import backfill
+from market_data_pipeline.pipelines.aaii.io.warehouse import Warehouse
+from market_data_pipeline.pipelines.aaii.replay import replay
 
 
 def test_full_history_is_explicit_strict_by_default_and_quarantine_is_auditable(tmp_path):

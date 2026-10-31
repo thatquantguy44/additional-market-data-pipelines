@@ -2,7 +2,7 @@
 
 The AAII slice implements a manifest-driven medallion path. Source-specific
 normalization and feature functions are pure Python. Warehouse, archive, and
-Parquet operations are isolated under `aaii/io/`. Optional platform packages are
+Parquet operations are isolated under `pipelines/aaii/io/`. Optional platform packages are
 imported only at their integration boundary. Other source connectors remain planned.
 
 ```text
@@ -20,9 +20,9 @@ split Silver and Gold promotion. Failed normalization never publishes a snapshot
 
 ## Source ownership
 
-Each implemented pipeline owns a folder under `src/market_data_pipeline/`.
+Each implemented pipeline owns a folder under `src/market_data_pipeline/pipelines/`.
 AAII's contracts, pure transforms, acquisition, warehouse/publishers, CLI and
-Dagster assets live in `aaii/`. Provider-independent file/YAML helpers live in
+Dagster assets live in `pipelines/aaii/`. Provider-independent file/YAML helpers live in
 `shared/`. The root CLI and Dagster entrypoints delegate to implemented pipelines.
 See the [master register](../pipelines.md) and
 [package layout/import guide](../development/pipeline_layout.md). Future sources

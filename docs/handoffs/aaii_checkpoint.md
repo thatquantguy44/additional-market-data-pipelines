@@ -111,9 +111,17 @@ Use `docs/development/verification.md` for current checks and hosted CI evidence
 ## Pipeline folder follow-up
 
 The user authorized source organization after completion. All AAII implementation
-now lives under `src/market_data_pipeline/aaii/`; `shared/` contains only generic
+now lives under `src/market_data_pipeline/pipelines/aaii/`; `shared/` contains only generic
 file/YAML helpers. Root CLI and Dagster module paths still work. Internal Python
 imports moved with the files; use the documented migration guide. Manifests,
 parser strings, raw paths, tables, data semantics and schedule defaults are
 unchanged. No live data migration or provider request is needed. The master
 register is `docs/pipelines.md`; update it when another pipeline is implemented.
+
+
+All future pipelines must own a separate snake_case package at
+`src/market_data_pipeline/pipelines/<pipeline_name>/`. The latest namespace move
+passed 72 offline tests (two PostgreSQL tests skipped), lint/formatting, build and
+isolated wheel CLI/Dagster checks; all 21 moved modules retain the same behavior
+excluding imports. Use `market_data_pipeline.pipelines.aaii` for pipeline-specific
+imports and module commands. The verification document records the current scope.

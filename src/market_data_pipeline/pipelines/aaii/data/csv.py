@@ -6,7 +6,7 @@ from dataclasses import asdict, dataclass
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
 
-from market_data_pipeline.aaii.manifest import Manifest
+from market_data_pipeline.pipelines.aaii.manifest import Manifest
 
 PARSER_VERSION = "aaii-csv-v1"
 

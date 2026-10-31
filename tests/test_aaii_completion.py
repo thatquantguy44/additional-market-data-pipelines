@@ -5,14 +5,14 @@ from pathlib import Path
 
 import yaml
 
-from market_data_pipeline.aaii.io.warehouse import Warehouse
+from market_data_pipeline.pipelines.aaii.io.warehouse import Warehouse
 
 FIXTURES = Path("tests/fixtures/aaii")
 
 
 def test_live_dagster_xls_retains_provenance_versions_and_asof(tmp_path, monkeypatch):
-    import market_data_pipeline.aaii.source as source
-    from market_data_pipeline.aaii.dagster_defs import defs
+    import market_data_pipeline.pipelines.aaii.source as source
+    from market_data_pipeline.pipelines.aaii.dagster_defs import defs
 
     day = [26]
     payload = [(FIXTURES / "synthetic.xls").read_bytes()]
@@ -70,9 +70,9 @@ def test_live_dagster_xls_retains_provenance_versions_and_asof(tmp_path, monkeyp
 
 
 def test_live_dagster_failure_keeps_previous_publication(tmp_path, monkeypatch):
-    import market_data_pipeline.aaii.source as source
-    from market_data_pipeline.aaii.dagster_defs import defs
-    from market_data_pipeline.aaii.pipeline import run
+    import market_data_pipeline.pipelines.aaii.source as source
+    from market_data_pipeline.pipelines.aaii.dagster_defs import defs
+    from market_data_pipeline.pipelines.aaii.pipeline import run
 
     root = tmp_path / "warehouse"
     run(

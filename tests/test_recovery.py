@@ -3,9 +3,9 @@ from pathlib import Path
 
 import pytest
 
-from market_data_pipeline.aaii.io.warehouse import Warehouse
-from market_data_pipeline.aaii.pipeline import run
-from market_data_pipeline.aaii.recovery import backup, restore, retain_snapshots
+from market_data_pipeline.pipelines.aaii.io.warehouse import Warehouse
+from market_data_pipeline.pipelines.aaii.pipeline import run
+from market_data_pipeline.pipelines.aaii.recovery import backup, restore, retain_snapshots
 
 
 def populated(root):

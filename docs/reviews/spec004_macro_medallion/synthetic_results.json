@@ -1,0 +1,59 @@
+{
+  "precision": {
+    "synthetic_raw_value": "1.123456789012345678900",
+    "parsed_value": "1.1234567890123457",
+    "raw_text_preserved": true,
+    "numeric_round_trip_exact": false
+  },
+  "metadata": {
+    "status_only_change_changes_hash": false,
+    "mismatched_payload_currency_rejected_by_normalizer": false,
+    "silver_fields": [
+      "ingested_at",
+      "is_missing",
+      "observation_date",
+      "raw_value",
+      "realtime_end",
+      "realtime_start",
+      "revision_number",
+      "row_hash",
+      "run_id",
+      "series_id",
+      "source",
+      "value"
+    ]
+  },
+  "capture_revisions": {
+    "synthetic_sequence": [
+      "1.25",
+      "1.30",
+      "1.25"
+    ],
+    "retained_rows": 1,
+    "unchanged_rerun_preserves_capture": true
+  },
+  "withdrawal": {
+    "previous_row_still_present_after_delete_payload": true
+  },
+  "intraday": {
+    "two_provider_timestamps_retain_rows": 1
+  },
+  "as_of": {
+    "later_capture_returned_for_earlier_cutoff": true,
+    "future_observation_with_blank_vintage_returned": true
+  },
+  "replay": {
+    "original_capture_preserved": false,
+    "original_numeric_text_preserved": true
+  },
+  "cross_rates": {
+    "same_date_synthetic_usd_jpy": 120.0,
+    "different_dates_produce_no_cross": true,
+    "returned_fields": [
+      "feature_name",
+      "observation_date",
+      "op",
+      "value"
+    ]
+  }
+}
