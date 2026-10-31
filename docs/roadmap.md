@@ -118,3 +118,21 @@ but awaits live workspace verification. No production deployment is active.
 Keep this project's
 catalogs, schemas, secrets, job names, and deployment targets independent of the
 FRED project.
+
+## New pipeline specifications — 2026-10-30
+
+The user requested two additional research capabilities. Their draft contracts
+are in the [specification index](../specs/README.md); neither connector has been
+implemented by this specification work. These additions do not replace the
+original 14-source inventory or change the current AAII completion and existing
+CFTC/FINRA/OFR priorities.
+
+| Backlog ID | Specification | Proposed scope and acquisition status |
+| --- | --- | --- |
+| `ecb-fx-reference` | [Spec 004: daily official FX reference rates](../specs/spec004/README.md) | ECB first, with explicit orientation, same-date crosses and observed revisions. Official documentation reviewed; live schema/connector not verified. Bank of Canada and BIS are deferred provider alternatives. |
+| `company-web-traffic` | [Spec 005: company/competitor web traffic estimates](../specs/spec005/README.md) | Free-first source feasibility and offline contract; no suitable free recurring visits feed verified. Similarweb is an optional paid candidate, with budget, account coverage and retention rights unresolved. DNS rankings remain a separate proxy candidate. |
+
+User-confirmed preferences: daily official reference rates; company/competitor
+traffic estimates; prefer free sources and document the paid option. Keep
+provider/schema/access review and synthetic fixtures ahead of implementation.
+Acquisition readiness and offline-contract acceptance are separate milestones.

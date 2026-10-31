@@ -22,13 +22,13 @@ change the CFTC → FINRA short-sale volume → OFR STFM sequence.
 | `cftc-cot` | Trader positioning, starting with TFF futures-only | Planned; next implementation | Proposed `cftc/`; absent | [Spec 001](../specs/spec001/README.md), [catalog](catalog/README.md#cftc) | Verify official access/schema/publication contract and write a new numbered implementation spec on its own branch. |
 | `finra-short-sale-volume` | Facility-scoped short-sale volume and matched denominators | Planned | Proposed `finra_short_sale_volume/`; absent | [Spec 001](../specs/spec001/README.md), [catalog](catalog/README.md#finra) | Confirm current extraction route, scope, terms and fixtures after CFTC. |
 | `ofr-stfm` | Short-term funding and repo measures | Planned | Proposed `ofr_stfm/`; absent | [Spec 001](../specs/spec001/README.md), [catalog](catalog/README.md#ofr) | Select series from metadata and verify provenance/units before implementation. |
-| `ecb-fx-reference` | Daily official FX reference rates, ECB first | Draft; no connector | Proposed `fx_reference_rates/`; absent | Local draft Spec 004: `specs/spec004/README.md` | Review the draft; verify live schema and build an authorized offline slice before acquisition. |
-| `company-web-traffic` | Company/competitor website visit estimates | Draft; acquisition source unresolved | Proposed `company_web_traffic/`; absent | Local draft Spec 005: `specs/spec005/README.md` | Verify a suitable free source first; paid Similarweb is an optional later decision. |
+| `ecb-fx-reference` | Daily official FX reference rates, ECB first | Initial scope accepted; no connector | Proposed `fx_reference_rates/`; absent | [Spec 004](../specs/spec004/README.md): nine quote currencies, confirmed 1999-01-01 backfill start where available, lossless source precision | Verify provider contract and plan an offline slice; coordinate shared changes with AAII. |
+| `company-web-traffic` | Company/competitor website visit estimates | Draft; acquisition source unresolved | Proposed `company_web_traffic/`; absent | [Spec 005](../specs/spec005/README.md) | Verify a suitable free source first; paid Similarweb is an optional later decision. |
 
-The FX/web specifications currently belong to separate, uncommitted specification
-work. They are indexed here without claiming that this refactor publishes or
-implements them. Provider alternatives such as Bank of Canada, BIS, Similarweb
-and DNS rankings are options within those drafts, not additional implemented
+The [specification index](../specs/README.md) records the FX/web contracts and
+user decisions. These documentation additions do not implement either connector
+or change the current build priority. Provider alternatives such as Bank of
+Canada, BIS, Similarweb and DNS rankings are options within those drafts, not additional implemented
 pipelines or interchangeable fallbacks.
 
 ## Remaining source candidates
