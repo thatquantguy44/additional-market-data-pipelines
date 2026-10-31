@@ -1,6 +1,6 @@
 # Specification index
 
-Updated: 2026-10-30. Numbers identify documents, not automatic build priority.
+Updated: 2026-10-31. Numbers identify documents, not automatic build priority.
 
 | Spec | Capability ID | Contract and status |
 | --- | --- | --- |
@@ -9,10 +9,11 @@ Updated: 2026-10-30. Numbers identify documents, not automatic build priority.
 | [003](spec003/README.md) | aaii-completion | AAII local completion implemented and verified; recurring acquisition and production deployment remain gated. |
 | [004](spec004/README.md) | fx-reference-rates | Initial scope accepted; [MacroMedallion overlap/gap review](../docs/reviews/spec004_macro_medallion/README.md) completed 2026-10-30. All nine ECB currencies already stored upstream; local connector deferred. Temporal, precision/metadata and FX Gold gaps identified. |
 | [005](spec005/README.md) | company-web-traffic | New draft: company/competitor visit estimates, free-first feasibility, optional paid Similarweb access. No connector implemented. |
+| [006](spec006/README.md) | cftc-tff-futures-only | Draft provider contract for the CFTC TFF Futures Only report. API dataset/schema, timing, identity, correction and access boundaries verified; no connector implemented. |
 
 ## Capability boundaries and proposed sequence
 
-Specs 004 and 005 are independent source capabilities. Both depend on the
+Specs 004, 005 and 006 are independent source capabilities. All depend on the
 existing Bronze, source-specific Silver/Gold, audit, replay, Parquet and
 warehouse boundaries described in [architecture](../docs/deployment/architecture.md).
 Neither pipeline depends on the other. Neither changes AAII semantics.
@@ -21,7 +22,9 @@ The FX overlap review supersedes the proposed new-ingester sequence: address
 MacroMedallion temporal correctness → exact values/metadata → FX-specific Gold.
 The existing Spec 004 contract supplies acceptance criteria for that follow-up.
 Web traffic source feasibility can proceed independently; acquisition waits for a source with suitable access and
-retention rights. There is no new shared-platform rebuild prerequisite.
+retention rights. Spec 006 is the approved next source-discovery branch; its
+connector still awaits review of its bounded provider contract. There is no new
+shared-platform rebuild prerequisite.
 
 The user selected **daily official reference rates**, **company/competitor
 traffic estimates**, and **prefer free sources; document paid option** on

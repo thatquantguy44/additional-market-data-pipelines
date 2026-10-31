@@ -128,9 +128,11 @@ The persistent service is unchanged: localhost 55438, database
 project `additional-market-data-live`. Settings are ignored `config/config.yaml`
 and `.env`. No new provider request or recurring schedule was enabled.
 
-Next source: create a separate CFTC branch after AAII review/merge. Verify official
-TFF futures-only access/schema/publication contracts and write a new numbered spec
-before coding. Preserve provider-specific grain; CFTC remains unimplemented.
+Next source: AAII merged through PR #2. CFTC TFF futures-only provider-contract
+discovery is active on `spec006-cftc-tff`; [Spec 006](../../specs/spec006/README.md)
+records the verified official endpoint, schema, timing, access and revision
+boundaries. Preserve provider-specific grain; CFTC remains unimplemented pending
+review, invented offline fixtures and a source-owned vertical slice.
 Next AAII operational work: establish recurring acquisition permission and reuse
 terms before scheduling; deploy durable workers, external monitoring/alerts and
 off-machine backups as appropriate. Live Delta requires a selected workspace.

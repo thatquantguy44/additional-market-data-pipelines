@@ -1,6 +1,6 @@
 # Master pipeline register
 
-Updated: 2026-10-30, America/New_York.
+Updated: 2026-10-31, America/New_York.
 
 This is the master index for **pipeline ownership, implementation status and
 next work**. It tracks all 20 concrete pipelines/candidates currently recorded
@@ -12,14 +12,14 @@ A draft spec or proposed package name does not mean a connector exists.
 ## Current build sequence and status
 
 AAII is the only implemented pipeline. Its local completion and package cleanup
-are on `feature/pipeline-completion`. CFTC TFF futures-only is next on a separate
-branch after AAII review/merge. The FX and web-traffic drafts do not silently
+merged through PR #2. CFTC TFF futures-only provider-contract discovery is active
+on `spec006-cftc-tff`; no CFTC package or connector exists. The FX and web-traffic drafts do not silently
 change the CFTC → FINRA short-sale volume → OFR STFM sequence.
 
 | Pipeline ID | Purpose | Status | Package under `src/market_data_pipeline/pipelines/` | Contract / evidence | Next scoped work |
 | --- | --- | --- | --- | --- | --- |
 | `aaii-investor-sentiment` | Weekly investor sentiment shares and bull/bear spread | Implemented locally; recurring acquisition gated | [`aaii/`](../src/market_data_pipeline/pipelines/aaii/) | [Spec 002](../specs/spec002/README.md), [Spec 003](../specs/spec003/README.md), [checkpoint](handoffs/aaii_checkpoint.md), [runbook](deployment/aaii_runbook.md) | Review/merge completion; establish recurring access and production operations before scheduling. |
-| `cftc-cot` | Trader positioning, starting with TFF futures-only | Planned; next implementation | Proposed `cftc/`; absent | [Spec 001](../specs/spec001/README.md), [catalog](catalog/README.md#cftc) | Verify official access/schema/publication contract and write a new numbered implementation spec on its own branch. |
+| `cftc-cot` | Trader positioning, starting with TFF futures-only | Provider contract drafted; connector absent | Proposed `cftc_tff/`; absent | [Spec 006](../specs/spec006/README.md), [Spec 001](../specs/spec001/README.md), [catalog](catalog/README.md#cftc) | Review Spec 006's TFF futures-only contract, then add invented offline fixtures and a source-owned local vertical slice. |
 | `finra-short-sale-volume` | Facility-scoped short-sale volume and matched denominators | Planned | Proposed `finra_short_sale_volume/`; absent | [Spec 001](../specs/spec001/README.md), [catalog](catalog/README.md#finra) | Confirm current extraction route, scope, terms and fixtures after CFTC. |
 | `ofr-stfm` | Short-term funding and repo measures | Planned | Proposed `ofr_stfm/`; absent | [Spec 001](../specs/spec001/README.md), [catalog](catalog/README.md#ofr) | Select series from metadata and verify provenance/units before implementation. |
 | `ecb-fx-reference` | Daily official FX reference rates, ECB first | Existing MacroMedallion coverage confirmed; no local connector | Proposed `fx_reference_rates/`; absent and deferred | [Spec 004](../specs/spec004/README.md), [overlap/gap review](reviews/spec004_macro_medallion/README.md): all nine currencies already stored upstream | Keep ECB ingestion in MacroMedallion; prioritize captured revisions/as-of/replay, exact values/metadata, then FX Gold outputs there. |
