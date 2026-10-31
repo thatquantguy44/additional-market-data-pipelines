@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from market_data_pipeline.aaii.io.warehouse import Warehouse
-from market_data_pipeline.aaii.pipeline import run
+from market_data_pipeline.pipelines.aaii.io.warehouse import Warehouse
+from market_data_pipeline.pipelines.aaii.pipeline import run
 
 
 @pytest.mark.postgres
@@ -73,7 +73,7 @@ def test_postgres_owned_state_backup_restores_to_an_empty_isolated_schema(tmp_pa
     from psycopg import sql
     from psycopg.conninfo import make_conninfo
 
-    from market_data_pipeline.aaii.recovery import backup, restore
+    from market_data_pipeline.pipelines.aaii.recovery import backup, restore
 
     token = uuid.uuid4().hex[:10]
     schemas = [f"recovery_source_{token}", f"recovery_target_{token}"]

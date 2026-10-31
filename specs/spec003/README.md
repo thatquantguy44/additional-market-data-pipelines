@@ -57,7 +57,19 @@ replayed Silver/Gold match exactly. Details and the next CFTC scope are in
 
 
 The subsequent user-authorized organization refactor groups AAII under
-`src/market_data_pipeline/aaii/` and adds `docs/pipelines.md` as the master register.
+`src/market_data_pipeline/pipelines/aaii/` and adds `docs/pipelines.md` as the master register.
 It changes internal import paths, preserving CLI/Dagster entrypoints and stored
 contracts. See `docs/development/pipeline_layout.md`; no provider/data semantics
 are changed and CFTC remains a separate implementation scope.
+
+
+## Pipelines namespace follow-up
+
+The user authorized nesting AAII and all future pipeline implementations under
+`src/market_data_pipeline/pipelines/<pipeline_name>/`. AAII's canonical module is
+`market_data_pipeline.pipelines.aaii`; the root CLI and repository Dagster
+entrypoints remain supported. All owned imports, examples, planned package paths
+and agent guidance must follow this layout. Acceptance: the offline fixture suite,
+CLI/Dagster entrypoint checks, lint/formatting and a clean package build pass;
+the built wheel contains the new namespace and no old direct `aaii/` package.
+This source move preserves persisted data contracts and needs no data migration.

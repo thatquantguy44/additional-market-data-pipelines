@@ -20,9 +20,9 @@ CFTC is the next separate pipeline branch; other connectors remain planned.
 
 [The master pipeline register](docs/pipelines.md) tracks all implemented, planned,
 draft and candidate pipelines, their package locations, specs and next work.
-Each implemented pipeline owns a subfolder of `src/market_data_pipeline/`.
-AAII lives in `aaii/`, including its parsers, warehouse/publishers, configuration,
-operations, CLI and Dagster definitions. Provider-independent file/YAML helpers
+Each implemented pipeline owns a subfolder of `src/market_data_pipeline/pipelines/`.
+AAII lives in `pipelines/aaii/`, including its parsers, warehouse/publishers,
+configuration, operations, CLI and Dagster definitions. Provider-independent file/YAML helpers
 live in `shared/`; root CLI/Dagster entrypoints remain supported.
 See [the package layout and import migration guide](docs/development/pipeline_layout.md).
 

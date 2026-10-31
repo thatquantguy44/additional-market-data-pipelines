@@ -53,7 +53,7 @@ See the checkpoint for provider-contract verification and new-spec acceptance st
 
 The user requested one folder per pipeline and a master pipeline document.
 `tasks/pipeline_layout.md` tracks the bounded refactor and verification.
-AAII owns its implementation under `src/market_data_pipeline/aaii/`, shared
+AAII owns its implementation under `src/market_data_pipeline/pipelines/aaii/`, shared
 helpers stay provider-independent, and existing root commands remain supported.
 `docs/pipelines.md` is the package/status register; other provider builds remain
 separate scopes. The roadmap remains the research/access backlog.

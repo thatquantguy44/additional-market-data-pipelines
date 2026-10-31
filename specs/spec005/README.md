@@ -266,11 +266,11 @@ start stopped after verified acquisition, storage rights, budget and monitoring.
 
 | Location | Responsibility when implemented |
 | --- | --- |
-| `src/market_data_pipeline/company_web_traffic/source.py` | Pipeline-owned optional provider transport; no generic scraping engine. |
-| `src/market_data_pipeline/company_web_traffic/manifest.py` | Source-specific manifest and universe validation. |
-| `src/market_data_pipeline/company_web_traffic/data/` | Immutable records, domain normalization, Decimal parsing, coverage DQ and features. |
-| `src/market_data_pipeline/company_web_traffic/` | Pipeline execution, configuration, CLI, replay and Dagster definitions. |
-| `src/market_data_pipeline/company_web_traffic/io/` | Source-owned archive, version tables, warehouse adapters and typed snapshots. |
+| `src/market_data_pipeline/pipelines/company_web_traffic/source.py` | Pipeline-owned optional provider transport; no generic scraping engine. |
+| `src/market_data_pipeline/pipelines/company_web_traffic/manifest.py` | Source-specific manifest and universe validation. |
+| `src/market_data_pipeline/pipelines/company_web_traffic/data/` | Immutable records, domain normalization, Decimal parsing, coverage DQ and features. |
+| `src/market_data_pipeline/pipelines/company_web_traffic/` | Pipeline execution, configuration, CLI, replay and Dagster definitions. |
+| `src/market_data_pipeline/pipelines/company_web_traffic/io/` | Source-owned archive, version tables, warehouse adapters and typed snapshots. |
 | `tests/fixtures/web_traffic/`, `tests/test_web_traffic_*.py` | Synthetic provider-shaped fixtures, rights/provenance README and transport/end-to-end tests. |
 | `docs/deployment/`, `resources/` | Cost/access runbook and stopped Dagster config after provider selection. |
 

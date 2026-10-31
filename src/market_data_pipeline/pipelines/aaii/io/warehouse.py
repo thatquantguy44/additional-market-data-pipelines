@@ -7,7 +7,7 @@ from dataclasses import asdict
 from datetime import UTC, datetime
 from pathlib import Path
 
-from market_data_pipeline.aaii.data.gold import features
+from market_data_pipeline.pipelines.aaii.data.gold import features
 from market_data_pipeline.shared.files import atomic_json
 
 SILVER_COLUMNS = (

@@ -9,9 +9,9 @@ from pathlib import Path
 
 import dagster as dg
 
-from market_data_pipeline.aaii.config import load_config, resolve_runtime
-from market_data_pipeline.aaii.operations import weekly_window
-from market_data_pipeline.aaii.pipeline import run
+from market_data_pipeline.pipelines.aaii.config import load_config, resolve_runtime
+from market_data_pipeline.pipelines.aaii.operations import weekly_window
+from market_data_pipeline.pipelines.aaii.pipeline import run
 
 
 class AaiiConfig(dg.Config):
@@ -39,7 +39,7 @@ def aaii_sentiment(context: dg.AssetExecutionContext, config: AaiiConfig) -> dg.
             warehouse=config.warehouse,
         )
         if config.live:
-            from market_data_pipeline.aaii.source import run_live
+            from market_data_pipeline.pipelines.aaii.source import run_live
 
             result = run_live(
                 Path(config.manifest_path),

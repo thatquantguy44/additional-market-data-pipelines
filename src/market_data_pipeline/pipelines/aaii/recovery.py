@@ -8,8 +8,8 @@ import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 
-from market_data_pipeline.aaii.io.parquet import current_snapshot, publish
-from market_data_pipeline.aaii.io.warehouse import (
+from market_data_pipeline.pipelines.aaii.io.parquet import current_snapshot, publish
+from market_data_pipeline.pipelines.aaii.io.warehouse import (
     GOLD_COLUMNS,
     RUN_COLUMNS,
     SILVER_COLUMNS,

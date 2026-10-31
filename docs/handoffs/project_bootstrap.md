@@ -18,13 +18,17 @@ The user selected CFTC on a separate subsequent branch. Recurring AAII permissio
 production orchestration/alerts and live Databricks verification remain open.
 
 The user subsequently authorized pipeline-owned source folders and a master
-pipeline document. AAII now lives under `src/market_data_pipeline/aaii/`; common
+pipeline document. AAII now lives under `src/market_data_pipeline/pipelines/aaii/`; common
 file/YAML helpers are under `shared/`. Existing root CLI/Dagster entrypoints
-forward to AAII. Read [the master pipeline register](../pipelines.md) and
+forward to AAII. Every future pipeline must use its own subpackage under
+`src/market_data_pipeline/pipelines/`. Read [the master pipeline register](../pipelines.md) and
 [import migration guide](../development/pipeline_layout.md) before adding a source.
 The register includes the tracked FX/web-traffic specifications. FX initial scope
-is accepted; web-traffic source selection remains draft. Neither connector is
-implemented. These specifications do not change the CFTC-first follow-on priority.
+is accepted; the [completed overlap/gap review](../reviews/spec004_macro_medallion/README.md)
+confirms all nine ECB FX currencies already exist in MacroMedallion. Keep ingestion
+owned there and prioritize temporal correctness, exact values/metadata and FX Gold
+outputs. No local FX connector is implemented. Web-traffic source selection
+remains draft. These specifications do not change the CFTC-first follow-on priority.
 
 The workflow library is now a complete local snapshot at `agents/agent-skills/`,
 pinned by `agents/agent-skills.lock.json` to revision

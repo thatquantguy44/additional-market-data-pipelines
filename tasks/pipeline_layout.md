@@ -5,7 +5,7 @@ current completion branch; CFTC implementation remains separate.
 
 Contract: each implemented pipeline owns its source-specific manifest, parsing,
 transforms, acquisition, warehouse/publishers, operations, recovery, CLI and
-Dagster assets beneath one subpackage of `src/market_data_pipeline/`. Extract
+Dagster assets beneath one subpackage of `src/market_data_pipeline/pipelines/`. Extract
 only genuinely reusable file/YAML helpers. Root commands and the Dagster module
 stay supported. Data semantics, manifests, parser versions, archives, tables,
 root identities, live data and schedules stay unchanged.
@@ -31,3 +31,17 @@ read-only existing warehouse/Parquet checks passed. The register retains all 20
 concrete IDs. Source organization and register are committed/pushed separately
 from existing roadmap/FX/web specification drafts. See the verification document
 and import migration guide for details and pickup.
+
+
+## Pipelines namespace follow-up — 2026-10-30
+
+- [x] Nest AAII under `src/market_data_pipeline/pipelines/aaii/` and add the
+  namespace package; migrate all owned imports and pipeline module commands.
+- [x] Require future pipelines at `pipelines/<pipeline_name>/` in root agent
+  guidance, the register, layout guide and planned FX/web-traffic package paths.
+- [x] Verify the offline suite (72 passed, two PostgreSQL tests skipped),
+  lint/formatting, dependencies, source/wheel builds and isolated wheel CLI/Dagster
+  entrypoints. Compare all 21 moved modules' behavior trees excluding imports.
+
+This follow-up changes package placement only; the prior PostgreSQL results above
+are historical evidence, not a claim that those two tests ran again.

@@ -7,7 +7,7 @@ Updated: 2026-10-30. Numbers identify documents, not automatic build priority.
 | [001](spec001/README.md) | positioning-market-structure | Original broader design; CFTC, FINRA and OFR remain planned. |
 | [002](spec002/README.md) | aaii-initial-slice | Existing AAII ingestion contract; see the current handoffs for verification status. |
 | [003](spec003/README.md) | aaii-completion | AAII local completion implemented and verified; recurring acquisition and production deployment remain gated. |
-| [004](spec004/README.md) | fx-reference-rates | Initial scope accepted 2026-10-30: ECB daily reference rates, nine quote currencies and confirmed backfill start 1999-01-01 where available. Connector not implemented. |
+| [004](spec004/README.md) | fx-reference-rates | Initial scope accepted; [MacroMedallion overlap/gap review](../docs/reviews/spec004_macro_medallion/README.md) completed 2026-10-30. All nine ECB currencies already stored upstream; local connector deferred. Temporal, precision/metadata and FX Gold gaps identified. |
 | [005](spec005/README.md) | company-web-traffic | New draft: company/competitor visit estimates, free-first feasibility, optional paid Similarweb access. No connector implemented. |
 
 ## Capability boundaries and proposed sequence
@@ -17,9 +17,10 @@ existing Bronze, source-specific Silver/Gold, audit, replay, Parquet and
 warehouse boundaries described in [architecture](../docs/deployment/architecture.md).
 Neither pipeline depends on the other. Neither changes AAII semantics.
 
-Suggested sequence for these additions: FX offline slice → bounded ECB
-verification → FX operational readiness. Web traffic source feasibility can
-proceed independently; acquisition waits for a source with suitable access and
+The FX overlap review supersedes the proposed new-ingester sequence: address
+MacroMedallion temporal correctness → exact values/metadata → FX-specific Gold.
+The existing Spec 004 contract supplies acceptance criteria for that follow-up.
+Web traffic source feasibility can proceed independently; acquisition waits for a source with suitable access and
 retention rights. There is no new shared-platform rebuild prerequisite.
 
 The user selected **daily official reference rates**, **company/competitor

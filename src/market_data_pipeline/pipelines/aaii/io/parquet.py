@@ -6,7 +6,11 @@ from pathlib import Path
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from market_data_pipeline.aaii.io.warehouse import GOLD_COLUMNS, RUN_COLUMNS, SILVER_COLUMNS
+from market_data_pipeline.pipelines.aaii.io.warehouse import (
+    GOLD_COLUMNS,
+    RUN_COLUMNS,
+    SILVER_COLUMNS,
+)
 from market_data_pipeline.shared.files import atomic_json
 
 TIMESTAMPS = {

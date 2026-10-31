@@ -5,7 +5,7 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 
-from market_data_pipeline.aaii.data.csv import PARSER_VERSION
+from market_data_pipeline.pipelines.aaii.data.csv import PARSER_VERSION
 from market_data_pipeline.shared.files import atomic_json, utc_timestamp
 
 

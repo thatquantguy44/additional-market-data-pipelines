@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from market_data_pipeline.aaii.io.databricks import publish_delta
+from market_data_pipeline.pipelines.aaii.io.databricks import publish_delta
 
 
 @pytest.mark.parametrize("catalog,schema", [("x; DROP TABLE t", "aaii"), ("main", "a.b")])

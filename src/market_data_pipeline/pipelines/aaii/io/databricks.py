@@ -9,7 +9,7 @@ import re
 import uuid
 from pathlib import Path
 
-from market_data_pipeline.aaii.io.warehouse import RUN_COLUMNS, SILVER_COLUMNS
+from market_data_pipeline.pipelines.aaii.io.warehouse import RUN_COLUMNS, SILVER_COLUMNS
 
 
 def _identifier(value: str) -> str:

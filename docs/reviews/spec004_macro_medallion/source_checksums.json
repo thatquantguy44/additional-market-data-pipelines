@@ -1,0 +1,16 @@
+{
+  "reviewed_revision": "e6cbe645175feff9cc945784195a535727df14fe",
+  "files": {
+    "manifests/ecb_rates.yml": "c9486d76778eed86715cf3702279efdd9ecfdf709fc51c3f99659c7fdbfd879f",
+    "config/cross_series.yml": "cd8fea0c784cd3d8354b9af0ad521c550d0b7104de37b55ac5164bd99edb6c7e",
+    "src/fred_pipeline/sources/ecb.py": "af732e84e47d312ef0eefdd40af05316a2a39b002251146b2329356667a15bae",
+    "src/fred_pipeline/data/transform.py": "5ddcbf4ddf2169d2f6bb08ff5d9a521f4fd7b0ca2101c3e2c17c13fa10d8c4f3",
+    "src/fred_pipeline/data/silver.py": "c1f5a4da341d5ab2b2c0b3e837cff2d11bb4676c9e50e05e0048277d26cea45e",
+    "src/fred_pipeline/io/local_store.py": "e8ec6ab3244ca2637a12bc088a43e4bd686da566a48fbcf337ee2b411f9428af",
+    "src/fred_pipeline/io/postgres_store.py": "78590aa0e1eb4a664132fefa44816e8470690c965bf26b65b1e74951376a7f61",
+    "src/fred_pipeline/writer/features.py": "fbdd4bd921b7a6317e76d7d2c5e6999404037618927e67c2ddacc832fa0f428a",
+    "src/fred_pipeline/writer/gold.py": "ba068440cda2f81c1cddb8164388137c9e1aa941d1e2a711643c0bebac961314",
+    "src/fred_pipeline/replay.py": "17e33bc51f056f2b11ef5d7fc41dead00907d8b38cfe36769fd8a1357b67327b",
+    "tests/test_ecb_client.py": "48946917731ed24774e4c231a3bebdb5e6ba2595174f7e5a005839290ede9f8f"
+  }
+}

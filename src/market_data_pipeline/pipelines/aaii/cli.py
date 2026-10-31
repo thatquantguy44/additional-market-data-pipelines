@@ -5,11 +5,11 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
-from market_data_pipeline.aaii.config import RuntimeConfig, load_config, resolve_runtime
-from market_data_pipeline.aaii.io.warehouse import Warehouse
-from market_data_pipeline.aaii.manifest import load_manifest
-from market_data_pipeline.aaii.pipeline import export, run
-from market_data_pipeline.aaii.replay import replay
+from market_data_pipeline.pipelines.aaii.config import RuntimeConfig, load_config, resolve_runtime
+from market_data_pipeline.pipelines.aaii.io.warehouse import Warehouse
+from market_data_pipeline.pipelines.aaii.manifest import load_manifest
+from market_data_pipeline.pipelines.aaii.pipeline import export, run
+from market_data_pipeline.pipelines.aaii.replay import replay
 from market_data_pipeline.shared.files import utc_timestamp
 
 
@@ -85,7 +85,7 @@ def main(argv=None) -> int:
             )
             if args.command == "run":
                 if args.live:
-                    from market_data_pipeline.aaii.source import run_live
+                    from market_data_pipeline.pipelines.aaii.source import run_live
 
                     result = run_live(
                         args.manifest,
@@ -100,8 +100,8 @@ def main(argv=None) -> int:
                         args.input, args.manifest, root, dsn=dsn, start=args.start, end=args.end
                     )
             elif args.command == "weekly":
-                from market_data_pipeline.aaii.operations import weekly_window
-                from market_data_pipeline.aaii.source import run_live
+                from market_data_pipeline.pipelines.aaii.operations import weekly_window
+                from market_data_pipeline.pipelines.aaii.source import run_live
 
                 now = (
                     datetime.fromisoformat(args.as_of.replace("Z", "+00:00"))
@@ -118,7 +118,7 @@ def main(argv=None) -> int:
                     max_attempts=runtime.operations.http_attempts,
                 )
             elif args.command == "backfill":
-                from market_data_pipeline.aaii.backfill import backfill
+                from market_data_pipeline.pipelines.aaii.backfill import backfill
 
                 result = backfill(
                     args.input,
@@ -132,7 +132,7 @@ def main(argv=None) -> int:
             elif args.command == "replay":
                 result = replay(args.source_root, root, dsn=dsn)
             elif args.command == "check":
-                from market_data_pipeline.aaii.operations import health_report
+                from market_data_pipeline.pipelines.aaii.operations import health_report
 
                 now = (
                     datetime.fromisoformat(args.as_of.replace("Z", "+00:00"))
@@ -143,7 +143,11 @@ def main(argv=None) -> int:
                     root, dsn=dsn, now=now, max_age_days=runtime.operations.max_age_days
                 )
             elif args.command in ("backup", "restore", "retain"):
-                from market_data_pipeline.aaii.recovery import backup, restore, retain_snapshots
+                from market_data_pipeline.pipelines.aaii.recovery import (
+                    backup,
+                    restore,
+                    retain_snapshots,
+                )
 
                 if args.command == "backup":
                     result = backup(root, args.destination, dsn=dsn)

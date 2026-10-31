@@ -16,7 +16,7 @@ def cli(*args, env=None, module="market_data_pipeline"):
     )
 
 
-@pytest.mark.parametrize("module", ["market_data_pipeline", "market_data_pipeline.aaii"])
+@pytest.mark.parametrize("module", ["market_data_pipeline", "market_data_pipeline.pipelines.aaii"])
 def test_cli_run_asof_replay_and_invalid_input(tmp_path, module):
     def invoke(*args, **kwargs):
         return cli(*args, module=module, **kwargs)
@@ -48,8 +48,8 @@ def test_cli_run_asof_replay_and_invalid_input(tmp_path, module):
 
 def test_dagster_job_materializes_fixture(tmp_path):
     dagster = pytest.importorskip("dagster")
-    from market_data_pipeline.aaii.dagster_defs import aaii_sentiment, defs
     from market_data_pipeline.orchestration.dagster_defs import defs as repository_defs
+    from market_data_pipeline.pipelines.aaii.dagster_defs import aaii_sentiment, defs
 
     assert repository_defs is defs
 

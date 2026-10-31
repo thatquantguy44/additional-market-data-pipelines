@@ -1,8 +1,15 @@
 # Spec 004 — Daily official FX reference rates
 
-Status: **initial scope accepted 2026-10-30; connector not implemented**. Created 2026-10-30.
+Status: **initial scope accepted; MacroMedallion overlap/gap review completed 2026-10-30; no local connector**. Created 2026-10-30.
 Capability ID: `fx-reference-rates`. Proposed first dataset: `ecb-fx-reference`.
 User-confirmed scope: **daily official reference rates**.
+
+**Review decision:** all nine requested ECB series already exist in MacroMedallion.
+Keep ingestion owned there. The [completed review](../../docs/reviews/spec004_macro_medallion/README.md)
+prioritizes observed revisions/as-of/replay, exact values/metadata, then FX-specific
+Gold outputs. The contract below remains the target; its proposed new connector
+and build sequence are deferred pending that upstream gap work. No upstream
+implementation or deployment was performed by this review.
 
 ## Objective and decisions
 
@@ -215,11 +222,11 @@ storage, lock topology, credentials if any, recovery and alert destination.
 
 | Location | Responsibility when implemented |
 | --- | --- |
-| `src/market_data_pipeline/fx_reference_rates/source.py` | Pipeline-owned injected HTTP/clock boundary and bounded ECB extraction. |
-| `src/market_data_pipeline/fx_reference_rates/manifest.py` | Typed FX manifest; preserve AAII validation in its own package. |
-| `src/market_data_pipeline/fx_reference_rates/data/` | Immutable normalized records, DQ and pure Decimal/native/inverse/cross transforms. |
-| `src/market_data_pipeline/fx_reference_rates/` | Pipeline execution, configuration, CLI, replay and Dagster definitions. |
-| `src/market_data_pipeline/fx_reference_rates/io/` | FX-owned archive, tables, warehouse adapters and typed snapshots. |
+| `src/market_data_pipeline/pipelines/fx_reference_rates/source.py` | Pipeline-owned injected HTTP/clock boundary and bounded ECB extraction. |
+| `src/market_data_pipeline/pipelines/fx_reference_rates/manifest.py` | Typed FX manifest; preserve AAII validation in its own package. |
+| `src/market_data_pipeline/pipelines/fx_reference_rates/data/` | Immutable normalized records, DQ and pure Decimal/native/inverse/cross transforms. |
+| `src/market_data_pipeline/pipelines/fx_reference_rates/` | Pipeline execution, configuration, CLI, replay and Dagster definitions. |
+| `src/market_data_pipeline/pipelines/fx_reference_rates/io/` | FX-owned archive, tables, warehouse adapters and typed snapshots. |
 | `tests/fixtures/ecb/`, `tests/test_fx_*.py` | Synthetic provider-shaped files, provenance README, transport and end-to-end cases. |
 | `resources/`, `docs/deployment/` | Stopped Dagster config and tested FX runbook. |
 
@@ -253,14 +260,14 @@ internals. The pipeline module provides its source-scoped entrypoint; any later
 root dispatcher must preserve legacy AAII commands and defaults:
 
 ```bash
-.venv/bin/python -m market_data_pipeline.fx_reference_rates validate --manifest manifests/ecb-fx-reference.yml
-.venv/bin/python -m market_data_pipeline.fx_reference_rates run --manifest manifests/ecb-fx-reference.yml \
+.venv/bin/python -m market_data_pipeline.pipelines.fx_reference_rates validate --manifest manifests/ecb-fx-reference.yml
+.venv/bin/python -m market_data_pipeline.pipelines.fx_reference_rates run --manifest manifests/ecb-fx-reference.yml \
   --input tests/fixtures/ecb/reference.csv --root data/fx-demo
-.venv/bin/python -m market_data_pipeline.fx_reference_rates run --manifest manifests/ecb-fx-reference.yml \
+.venv/bin/python -m market_data_pipeline.pipelines.fx_reference_rates run --manifest manifests/ecb-fx-reference.yml \
   --live --start 2026-10-01 --end 2026-10-30 --root data/fx-smoke
-.venv/bin/python -m market_data_pipeline.fx_reference_rates gold --root data/fx-demo \
+.venv/bin/python -m market_data_pipeline.pipelines.fx_reference_rates gold --root data/fx-demo \
   --as-of 2026-10-30T20:00:00Z
-.venv/bin/python -m market_data_pipeline.fx_reference_rates replay --source-root data/fx-demo \
+.venv/bin/python -m market_data_pipeline.pipelines.fx_reference_rates replay --source-root data/fx-demo \
   --root data/fx-replayed
 ```
 
