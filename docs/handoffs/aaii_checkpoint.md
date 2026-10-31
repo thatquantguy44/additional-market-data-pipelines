@@ -102,7 +102,9 @@ The remote is `https://github.com/thatquantguy44/market-medallion.git`.
 The actual checkout is `pipelines/market-medallion`; its old path is a compatibility
 symlink. Preserve database/volume identifiers and immutable historical metadata.
 The subsequent organization task populates `docs/pipelines.md` as the master
-register. `docs/handoff.md` and separate FX/web draft/spec changes remain user work.
+register. `docs/handoff.md` points to this checkpoint and the master handoff.
+The FX/web specifications are tracked in `specs/README.md`; neither connector
+is implemented.
 Use `docs/development/verification.md` for current checks and hosted CI evidence.
 
 
