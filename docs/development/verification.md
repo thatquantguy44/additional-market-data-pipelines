@@ -1,6 +1,7 @@
 # AAII slice verification
 
-Verified 2026-10-26 (America/New_York), Python 3.12 on macOS.
+Initial slice verified 2026-10-26 (America/New_York), Python 3.12 on macOS.
+The Spec 003 completion results below supersede these initial counts/state.
 
 - **54 tests passed** with `MARKET_DATA_TEST_POSTGRES_DSN` pointing to a dedicated
   disposable PostgreSQL 17.6 container; no live AAII request is part of the suite.
@@ -120,3 +121,47 @@ Hosted verification also passed for rename commit `88e0354` on 2026-10-30:
 The hosted job passed all 54 tests, including isolated PostgreSQL integration,
 snapshot verification, lint/formatting, and source/wheel builds. This supersedes
 the original account-level execution block; no billing settings were changed.
+
+
+## Spec 003 AAII completion — 2026-10-30 America/New_York
+
+- Full suite: **68 passed**, including both real PostgreSQL tests against a
+  dedicated disposable PostgreSQL 17.6 instance on localhost 55439. No test
+  contacts AAII or writes to the live warehouse. Without the DSN: 66 passed,
+  two PostgreSQL tests skipped.
+- Synthetic binary XLS workbooks exercise Dagster's real XLS success/failure
+  paths, idempotency, correction/reversion, as-of results, materializations and
+  exact raw/HTTP/selection retention. Fixture generation uses optional isolated
+  xlwt tooling; it adds no runtime dependency. The source package includes XLS.
+- Operational tests verify New York overlap, stale/failed/partial state handling,
+  connection-failure health, archived transient responses, Retry-After pacing,
+  and stopped live schedule gating/dynamic bounds. Configuration defaults keep
+  routine acquisition disabled.
+- Historical tests verify strict rejection, explicit quarantine, partial status,
+  CLI exits, original first-seen times, gaps and deterministic backfill replay.
+- Recovery tests verify inventory/digest rejection, empty-target enforcement,
+  Silver/Gold equality, physical audit pointers, distinct warehouse identity,
+  PostgreSQL isolation and rollback, dry-run retention and current/Bronze protection.
+- Ruff lint/formatting, source/wheel build, dependency checks and pinned library
+  integrity pass. No dependency or vendored snapshot was changed.
+
+The existing authorized workbook was imported offline into the unchanged live
+PostgreSQL target after backing up and restoring the original four-date state to
+an isolated PostgreSQL schema. Backfill run `28556d16d7ee4934bf80e8cd5a521120`
+accepted 2,046 reported dates, 1987-07-24 through 2026-10-22, inserted 2,042
+versions, and quarantined three invalid rows. The repeat import inserted zero.
+The completed history was backed up, restored to SQLite and replayed from Bronze;
+all Silver versions and Gold results matched. Publication timestamps remain null.
+Machine-readable evidence is ignored `data/aaii-live/completion-verification.json`.
+Only a dry-run retention was performed on the live root. No new AAII fetch,
+schedule enablement, cloud deployment or data redistribution occurred.
+
+The three exclusions are 1987-06-26, 1987-07-17 and 1996-01-11, all
+missing/nonnumeric shares. Nine gaps over eight days remain visible. Both
+backfill runs have partial audit status; the health readout intentionally reports
+that trailing partial outcome until a later clean import. Historical observations
+were first seen at the actual import, not reconstructed publication dates.
+
+Recurring AAII acquisition rights, deployed daemon/alert routing, off-machine
+backup policy and live Databricks remain external prerequisites. CFTC remains
+unimplemented and starts on the next separate branch.

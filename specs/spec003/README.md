@@ -1,6 +1,6 @@
 # Spec 003 — AAII completion
 
-Status: implementation scope authorized 2026-10-30. Branch: feature/pipeline-completion.
+Status: implemented and locally verified 2026-10-30. Branch: feature/pipeline-completion.
 The user selected AAII completion first; CFTC is a separate subsequent branch.
 
 ## Completion contract
@@ -45,3 +45,12 @@ for a reviewed explicit local backfill after offline semantics pass.
 AAII is ready to hand off when all four capabilities pass their checks. Recurring
 provider permission, production alert destinations/daemon deployment and live
 Databricks verification are operational prerequisites, not claims of completion.
+
+
+## Verification outcome
+
+68 tests pass including isolated PostgreSQL persistence and restore. The existing
+local workbook backfilled 2,046 valid reported dates, with three quarantined rows
+and a partial audit result. Unchanged rerun added zero versions; backed-up and
+replayed Silver/Gold match exactly. Details and the next CFTC scope are in
+`docs/handoffs/aaii_checkpoint.md`; operational prerequisites above remain open.

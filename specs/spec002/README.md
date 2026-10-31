@@ -3,6 +3,9 @@
 Status: implementation contract, 2026-10-26. This supersedes Spec 001's
 CFTC-first order and SQLite-only delivery; other providers remain planned.
 
+Operational/backfill completion is specified by [Spec 003](../spec003/README.md).
+The strict bounded contracts below remain the legacy replay baseline.
+
 ## Objective and boundaries
 
 Import an authorized local AAII export into Bronze, versioned Silver, Gold,

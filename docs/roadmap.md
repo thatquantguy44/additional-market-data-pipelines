@@ -1,14 +1,14 @@
 # Master research roadmap and source backlog
 
-Last updated: 2026-10-26. This is the canonical backlog for source selection;
+Last updated: 2026-10-30. This is the canonical backlog for source selection;
 the [master handoff](handoffs/project_bootstrap.md) records the current pickup
-point. AAII has an executable authorized-local-CSV slice; automated provider
-retrieval remains unverified. Other sources remain unimplemented. Research uses are hypotheses,
+point. AAII has a completed local CSV/XLS pipeline, bounded live acquisition,
+historical backfill and verified recovery. Recurring acquisition remains gated. Other sources remain unimplemented. Research uses are hypotheses,
 and neither low adoption nor predictive value has been established.
 
 ## Main scope: positioning and market structure
 
-Spec 002 implements AAII first with Parquet, SQLite/PostgreSQL, and Dagster.
+Specs 002/003 implement AAII first with Parquet, SQLite/PostgreSQL, and Dagster.
 Spec 001 retains the broader ingestion design, with CFTC positioning,
 FINRA short-sale volume and OFR funding measures still planned. SEC settlement
 failures are a candidate extension. Build and verify one provider end to end
@@ -18,7 +18,7 @@ to provider-contract verification.
 ## Additional positioning and market-structure sources
 
 The following seven additions remain in the backlog. AAII is promoted to the
-first local CSV slice; the other six remain research candidates. They supplement CFTC, FINRA short-sale
+first completed local pipeline; the other six remain research candidates. They supplement CFTC, FINRA short-sale
 volume, OFR STFM, and SEC fails-to-deliver candidates in the
 [source catalog](catalog/README.md). FINRA venue transparency is distinct from
 short-sale volume; OFR Hedge Fund Monitor is distinct from STFM.
@@ -105,6 +105,9 @@ For each candidate, progress through these stages and record the evidence:
 Persist original payloads, observation dates, verified publication dates when
 known, retrieval timestamps, first-seen versions, and corrections. Free viewing
 or downloading does not establish redistribution permission.
+
+CFTC TFF futures-only is the next separate pipeline branch after AAII review.
+Verify its official provider contract and write a new numbered spec before coding.
 
 ## Platform growth
 

@@ -31,16 +31,7 @@ official workbook layout and bounded PostgreSQL live load are now verified.
 4. Run an explicitly bounded live load to a dedicated persistent local PostgreSQL
    database, query persisted rows/role/schema, rerun for idempotency, and record evidence.
 
-## Checkpoint and next scope
-
-The implementation and configured live follow-up are complete. The workflow
-library is vendored locally at its existing pin, with an offline integrity check.
-Stop here after the requested commit/push series. On resumption, use
-`docs/handoffs/aaii_checkpoint.md` and the next-task checklist in `tasks/todo.md`.
-Recommended next work is synthetic XLS coverage of the successful bounded live
-Dagster path, using injected transport/clock behavior without provider access.
-
-## Active AAII completion branch — 2026-10-30
+## Completed AAII completion branch — 2026-10-30
 
 The user selected priorities 1–4 for this branch; CFTC is the next separate
 pipeline branch. Spec 003 supersedes the earlier stop after the test-only scope.
@@ -51,4 +42,7 @@ pipeline branch. Spec 003 supersedes the earlier stop after the test-only scope.
 4. Portable owned-table/Bronze backup, empty-target restore and snapshot retention.
 5. Verify against isolated PostgreSQL, update the runbook/handoff, commit and push.
 
-An existing empty untracked docs/pipelines.md is preserved as user work.
+Existing empty untracked docs/pipelines.md and docs/handoff.md are preserved as user work.
+
+The next scoped source is CFTC TFF futures-only on a separate branch after review/merge.
+See the checkpoint for provider-contract verification and new-spec acceptance steps.

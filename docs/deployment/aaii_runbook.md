@@ -43,7 +43,7 @@ audit = pq.read_table(snapshot / "audit.parquet")
 
 Keep old snapshots for rollback and inspection. Do not glob all snapshot files
 as one dataset. The pointer is the publication boundary; never use an incomplete
-generation after a failed export. Retention/garbage collection is manual.
+generation after a failed export. Use the dry-run-first retention command below to remove old managed generations.
 Audit Parquet reflects the last published snapshot; inspect warehouse audit and
 Bronze receipts for trailing failed/partial runs until the next successful export.
 
@@ -99,9 +99,11 @@ routine restarts. `docker compose ... down` preserves the named volume.
 The completed live run is in the persistent Compose project
 `additional-market-data-live`, container `additional-market-data-live-postgres-1`,
 on localhost port **55438**. The role `aaii_writer` is NOLOGIN/NOSUPERUSER and owns
-schema `aaii`; login `market_data` can assume it. Four reported dates, October 1,
-8, 15 and 22, 2026, were saved. Reimporting the original payload added zero
-versions. Inspect `data/aaii-live/verification.json` for the run ID and evidence.
+schema `aaii`; login `market_data` can assume it. The initial four-date load is recorded in `data/aaii-live/verification.json`.
+The 2026-10-30 local historical backfill now contains 2,046 reported dates,
+1987-07-24 through 2026-10-22. Three invalid historical rows remain quarantined;
+reimport added zero versions. `data/aaii-live/completion-verification.json`
+records the backfill, quality report, verified backup/restore and replay.
 
 To restart this specific service without changing its persistent volume:
 
@@ -126,12 +128,13 @@ moving beyond the synthetic demo. For PostgreSQL, set `warehouse: postgres` and
 inject the DSN into the worker. All workers must share the persistent Bronze and
 Parquet root. One writer topology per warehouse is required.
 
-The schedule is stopped by default. Enabling it only schedules local CSV imports.
-Use atomically delivered input files so readers cannot capture a partially
-written export. Validation failures do not retry automatically; other asset
-failures retry twice, 30 seconds apart. A failed/partial run is visible in Dagster
-and the warehouse. Provider freshness alerts, stale-file sensors, a production
-run launcher/daemon, and external alert destinations are not configured.
+Both schedules are stopped by default. `aaii_thursday_local_import` schedules
+supplied local files. Use atomically delivered files so readers cannot capture
+a partially written export. `aaii_weekly_live` uses dynamic overlapping bounds
+and requires both `MARKET_MEDALLION_CONFIG` and the YAML access acknowledgement
+described below. Validation failures do not retry automatically; other asset
+failures retry twice, 30 seconds apart. HTTP retries are separately bounded.
+A production run launcher/daemon and external alert destinations are not configured.
 For a manual bounded live execution, use `resources/dagster-aaii-live.yml`.
 For a local XLS execution, set the XLS manifest plus explicit `start` and `end`.
 
@@ -205,3 +208,137 @@ Live acceptance requires publishing twice without duplicate versions, publishing
 a correction and reversion, checking Gold/as-of SQL results and raw lineage,
 and retrying a deliberately interrupted publish. No workspace or job is created
 by this repository's local commands.
+
+
+## Weekly acquisition and health
+
+The runtime example includes:
+
+```yaml
+operations:
+  overlap_days: 28          # allowed 7–90 days
+  max_age_days: 10          # allowed 1–90 days
+  http_attempts: 3          # allowed 1–5 attempts
+  scheduled_live_access: false
+```
+
+For an explicit manual weekly acquisition, run `weekly --config config/config.yaml`.
+It ends on today's America/New_York date and overlaps the previous 28 days by
+default, so changes to already ingested dates are observed again. It does not
+assume only the latest week can change. Older corrections require an explicit
+wider bounded run or a local historical backfill. `--as-of` sets only the weekly
+selection clock; capture time remains actual retrieval time.
+
+The live schedule uses Thursday 10:00 America/New_York. Before deliberately
+starting it, verify recurring acquisition permission, inject secrets and
+`MARKET_MEDALLION_CONFIG` into the worker/daemon, and set
+`operations.scheduled_live_access: true`. It otherwise returns a skip reason,
+even if someone enables the schedule. No daemon or live schedule was enabled
+by Spec 003. The two schedule definitions should not both publish the same input
+unnecessarily. Keep one writer topology on shared durable storage.
+
+HTTP 429/500/502/503/504 responses are archived before retry. Retry-After seconds
+or HTTP dates are honored; a requested delay over 30 seconds ends this invocation
+instead of retrying early. Other transient attempts use bounded exponential delays.
+Connection/read timeouts have sanitized local transport logs; TLS verification
+remains enabled. At most `http_attempts` network attempts occur per invocation.
+
+```bash
+.venv/bin/python -m market_data_pipeline check --config config/config.yaml
+```
+
+Health returns JSON and exits 1 for an uninitialized warehouse, trailing failed
+or partial run, unresolved later transport failure, stale latest reported date,
+stale successful capture, or missing committed Parquet files. It reads warehouse
+and local operation state without fetching data. `max_age_days` is a configurable
+age threshold, not a provider publication timestamp or holiday calendar. Arrange
+an external monitor/alert destination to run this command in a deployed service;
+none is configured here. A historical quarantine remains an explicit partial
+status until a later clean run; inspect its quality report instead of treating it
+as a transport outage. An export does not clear historical audit outcomes.
+
+## Explicit historical XLS backfill
+
+Use an already authorized local workbook; the command never downloads history.
+Back up the existing root/warehouse first. `backfill` lifts the weekly 90-day
+selection limit only with explicit start/end dates. Future bounds, duplicate
+dates, malformed labels and schema drift still block promotion.
+
+```bash
+.venv/bin/python -m market_data_pipeline backfill \
+  --input data/inbox/sentiment.xls --config config/config.yaml \
+  --start 1987-01-01 --end 2026-10-30
+# To explicitly exclude invalid share rows, add --quarantine-invalid.
+```
+
+Strict mode rejects selected missing/error/non-finite shares or invalid totals.
+The quarantine option retains those original cells in Bronze and writes
+`quality.json` with source row, reported date, rule, accepted count and gaps over
+eight days. Accepted rows publish to Silver/Gold/Parquet, but audit/result status
+is `partial` and CLI exit is **2**. A gap is visible; no missing observation is
+invented. All-invalid windows fail. Review/report exclusions before using history.
+
+The local verified import excluded 1987-06-26, 1987-07-17 and 1996-01-11 for
+missing/nonnumeric shares. It accepted 2,046 dates, inserted 2,042 new versions
+beside the existing four, and inserted zero versions on rerun. No new provider
+request was made. Publication timestamps remain null, and new first-seen times
+are the actual import time, not dates in the historical workbook.
+
+New explicit backfills archive parser contract `aaii-xls-v2` with selection and
+quarantine policy. Legacy `aaii-xls-v1` captures retain their strict bounded replay
+contract. Replay reproduces backfill exclusions and returns partial run IDs;
+its CLI exits 1 if any run is rejected or partial.
+
+## Backup, restore and retention
+
+```bash
+.venv/bin/python -m market_data_pipeline backup --config config/config.yaml \
+  --destination data/backups/aaii-2026-10-30
+.venv/bin/python -m market_data_pipeline restore \
+  --backup data/backups/aaii-2026-10-30 --root data/aaii-restored
+```
+
+Backup requires a new directory separate from the source root. The writer lock
+and database transaction capture owned Silver versions, derived Gold, audit runs,
+date-basis contracts, Bronze and the currently committed Parquet generation.
+`backup.json` lists SHA-256 digests of every package file. Retain backups on a
+separate secured durable volume/location; a copy on the same disk is only a local
+recovery checkpoint. Digests detect accidental change; they are not signatures.
+Treat packages as trusted, potentially licensed data. Symlinks are rejected.
+
+This is an application-owned logical backup, **not a PostgreSQL server backup**.
+It excludes passwords, config, global roles/grants, unrelated tables, server
+settings, operation logs and older snapshot generations. Use your platform's
+native backup policy for database-wide recovery; PostgreSQL documents
+[pg_dump](https://www.postgresql.org/docs/17/app-pgdump.html) and
+[pg_restore](https://www.postgresql.org/docs/17/app-pgrestore.html) for that scope.
+No native client or cluster configuration is needed for the application backup.
+
+Restore verifies the complete file inventory before writes. Use an empty target
+directory and an empty target warehouse. The command above restores to SQLite;
+for PostgreSQL, supply a **separate restore config** pointing to an already
+provisioned empty database/schema and a new root. Never point restore at the live
+config. Roles/schema/permissions must be provisioned separately. Restore retains
+version/run IDs and timestamps, recomputes and compares Gold, adjusts physical
+audit Bronze pointers, assigns a distinct target warehouse identity and publishes
+fresh Parquet. Original Bronze provenance stays unchanged. On a failed restore,
+keep the source/backup intact and retry into another clean target after resolving
+the cause. There is no in-place overwrite mode or migration engine.
+
+The original four-date PostgreSQL backup was restored to an isolated PostgreSQL
+schema and compared exactly. The completed 2,046-date warehouse was also backed
+up, restored to SQLite and replayed offline, with equal Silver/Gold results.
+Local evidence and backup locations are in `completion-verification.json`.
+
+```bash
+.venv/bin/python -m market_data_pipeline retain --config config/config.yaml --keep 5
+# Review the proposed list; only then execute the same command with --apply.
+```
+
+Retention always preserves the current pointer's generation and the most recent
+additional managed generations up to `keep`. It only removes matching managed
+snapshot directories; it never deletes Bronze, warehouse rows or backups.
+Dry run is the default; applied deletions have a local operation record. Ensure
+consumers no longer use old generations before applying; there is no reader-lease
+system. Live verification only performed a dry run. Backup expiry and Bronze
+retention are separate operator decisions, not automated here.

@@ -3,7 +3,7 @@
 Read `README.md`, `specs/spec001/README.md`, and
 `docs/handoffs/project_bootstrap.md` before substantive work. Keep implemented
 slices distinct from planned connectors; use the current handoff for status.
-For the AAII slice, also read `specs/spec002/README.md` and
+For the AAII slice, also read `specs/spec002/README.md`, `specs/spec003/README.md`, and
 `docs/handoffs/aaii_checkpoint.md`. The checkpoint defines the next bounded scope;
 do not restart from Spec 001's original CFTC-first plan.
 

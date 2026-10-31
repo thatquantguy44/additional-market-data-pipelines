@@ -1,160 +1,105 @@
-# AAII checkpoint and next scoped work
+# AAII completion checkpoint and next pipeline
 
-Implementation checkpoint: 2026-10-26, America/New_York.
-Repository identity updated 2026-10-30 to **MarketMedallion** (`market-medallion`).
-This is a deliberate stopping point:
-the first AAII slice, configured PostgreSQL live run, and local workflow snapshot
-are complete. Do not resume by rebuilding the scaffold or adding another source.
+Updated 2026-10-30, America/New_York. Branch: `feature/pipeline-completion`.
+The user explicitly selected **finish AAII first; CFTC on the next branch**.
+Spec 003 supersedes the previous test-only pickup task. AAII's local pipeline
+capabilities are complete; do not restart its scaffold or silently enable downloads.
 
 ## Read first
 
-1. Root `AGENTS.md` and `README.md`.
-2. `specs/spec002/README.md` (active implementation contract); Spec 001 describes
-   the broader future CFTC/FINRA/OFR scope.
-3. This checkpoint, `tasks/todo.md`, and `docs/deployment/aaii_runbook.md`.
-4. `agents/agent-skills/skills/using-agent-skills/SKILL.md`, then the routed skills.
+Read root `AGENTS.md`, `README.md`, Specs 002/003, this checkpoint, `tasks/todo.md`,
+and `docs/deployment/aaii_runbook.md`. Use the pinned local workflow library via
+`agents/agent-skills/skills/using-agent-skills/SKILL.md`. The master handoff and
+roadmap retain the complete 14-source backlog; this checkpoint does not replace it.
 
-The master handoff and roadmap retain all 14 additional source IDs. This focused
-checkpoint does not replace that inventory or authorize expanding source scope.
+## Verified completion
 
-## Completed and verified
+- Real synthetic binary XLS fixtures execute through the bounded live Dagster
+  path with offline HTTP/clock injection. Tests verify exact bytes/provenance,
+  unshifted reported dates, unchanged reruns, corrections/reversions, as-of
+  results, materializations and failure preservation of the current publication.
+- Configured overlapping weekly bounds, HTTP retries and Retry-After handling,
+  health/status checks, and a separately gated stopped live schedule are implemented.
+- Explicit local historical XLS backfill is strict by default. Opt-in quarantine
+  preserves invalid cells/reasons and publishes accepted rows with partial status.
+  Legacy bounded archives replay unchanged; historical policy is versioned.
+- Owned-state backups include warehouse records, Bronze and the committed
+  snapshot with digests. Empty-target recovery preserves versions/Gold and uses
+  a distinct warehouse identity. Dry-run-first snapshot retention protects
+  current publication and Bronze. SQLite and real PostgreSQL recovery pass.
+- **68 tests passed**, including both isolated PostgreSQL integration tests.
+  Ruff, package build, dependency and pinned snapshot checks are recorded in
+  `docs/development/verification.md`. Application tests never contact AAII.
 
-- Manifest-driven CSV and bounded official XLS ingestion, exact-byte Bronze,
-  transactional Silver revisions and Gold, audit, typed Parquet snapshots, and
-  offline replay. Date bounds and original HTTP metadata survive replay.
-- SQLite and PostgreSQL use the same pipeline contract. Runtime YAML configures
-  host, port, database, login user, effective role, schema, SSL mode and timeout.
-  Passwords resolve from the named environment variable, not YAML.
-- A Dagster asset/job supports local and explicit bounded live execution. The
-  default Thursday schedule remains stopped and configured for local input.
-- A Delta publisher/notebook exists but has not been verified in Databricks.
-- Workflow library: 188 ordinary files/symlinks in `agents/agent-skills/`, pinned
-  to `f63ec56a3cc936408d792956ae583c3c96a825bd`. There is no Git submodule or
-  nested Git metadata. `agents/agent-skills.lock.json` records provenance and
-  content integrity; the local verifier needs no GitHub access.
-
-Last full application verification: **54 tests passed**, including the dedicated
-PostgreSQL integration test. Lint, formatting, package build, dependency checks,
-and the two library validators passed. At closeout the snapshot checksum, lint,
-formatting and staged/unstaged whitespace checks were also verified. Application
-tests contain no live provider requests. See `docs/development/verification.md`.
-
-## Local data and service left in place
+## Local data/service left in place
 
 | Setting | Value |
 | --- | --- |
-| Compose project / container | `additional-market-data-live` / `additional-market-data-live-postgres-1` |
-| Endpoint | `127.0.0.1:55438` (container internal port 5432) |
-| Database / schema | `additional_market_data` / `aaii` |
-| Login / effective writer | `market_data` / `aaii_writer` |
-| Runtime settings | ignored `config/config.yaml` |
-| Password | `AAII_POSTGRES_PASSWORD` in ignored `.env`; do not print or commit |
-| Bronze / Parquet / evidence | ignored `data/aaii-live/`, including `verification.json` |
+| Compose project/container | `additional-market-data-live` / `additional-market-data-live-postgres-1` |
+| Endpoint | `127.0.0.1:55438` (internal 5432) |
+| Database/schema | `additional_market_data` / `aaii` |
+| Login/effective writer | `market_data` / `aaii_writer` |
+| Settings/secret | ignored `config/config.yaml`; `AAII_POSTGRES_PASSWORD` in ignored `.env` |
+| Bronze/Parquet/evidence | ignored `data/aaii-live/`, `completion-verification.json` |
 
-Live run `2e02a48857a247918da76b6dd1a8c8cf` stored four observations, reported
-dates October 1, 8, 15 and 22, 2026. A same-payload rerun inserted zero revisions.
-Read-only closeout inspection confirmed the service healthy and four Silver/four
-Gold rows. The live service and its persistent volume are left available for
-DBeaver; the independent disposable test container is removed after checks.
+The initial four-date live load remains intact. An offline backfill from the
+already downloaded official workbook now holds **2,046 Silver versions and
+2,046 Gold dates**, 1987-07-24 through 2026-10-22. Backfill run
+`28556d16d7ee4934bf80e8cd5a521120` inserted 2,042 versions. Rerun inserted zero.
+Three rows (1987-06-26, 1987-07-17, 1996-01-11) were explicitly quarantined for
+missing/nonnumeric shares; both backfill audits remain partial. Nine gaps over
+eight days are recorded, including missing dates. Do not fill them silently.
 
-Fresh checkouts do not include `.env`, the local config, volumes or data. Use the
-checked-in examples and runbook to configure a new environment; do not borrow
-credentials or deployment settings from sibling repositories.
+Verified local backups: `data/backups/aaii-before-backfill-20261031T010011` and
+`data/backups/aaii-completed-history`. The initial backup restored into a disposable
+PostgreSQL schema; completed history restored and replayed into SQLite exactly.
+These same-disk packages are local checkpoints, not an off-machine backup policy.
+The disposable PostgreSQL test container is removed after checks; keep the live
+service/volume available for DBeaver. No new provider request was made in this scope.
+Fresh checkouts contain none of these secrets, volumes or provider workbooks.
 
-## Semantics to preserve
+## Semantics and operating boundaries
 
-- XLS `Date` is the provider's **Reported Date** label. Do not shift it to a
-  survey-week-ending date or fabricate a publication timestamp. The compatibility
-  column is named `survey_date`; warehouse date-basis contracts prevent mixing
-  reported and survey dates. Unknown publication times remain null.
-- `aaii_gold_latest` holds the latest observed version **per ingested date**, not
-  just the newest week. New weeks append dates; corrections change that date's
-  Gold row and retain prior Silver versions. Unchanged observations add no version.
-- Select versions by availability before calculating historical features.
-  Historical downloads do not establish historical publication vintages.
-- Read Parquet using `current.json`; do not combine all snapshot generations.
-  Partial publication is repairable with `export`. Replay preserves rejection
-  receipts and stops on unresolved promotion outcomes.
+- XLS `survey_date` is the unshifted provider **Reported Date** compatibility
+  field. Do not mix it with survey-ending dates; contracts enforce the basis.
+- `aaii_gold_latest` means the latest observed version **per ingested date**.
+  New weeks append dates; changed dates retain previous Silver versions.
+- New historical rows became available at import time. Publication timestamps
+  remain null; these are not historical point-in-time publication vintages.
+- Read Parquet from `current.json`. Quarantine publishes accepted rows with
+  an explicit partial result; `backfill` exits 2 and replay exits 1 for partials.
+- `check` reports trailing partial/failed outcomes and stale dates/captures.
+  Review the quality report; a later clean acquisition can become healthy.
+- Both schedules stay stopped. Recurring permission, daemon/worker deployment,
+  durable storage/secret injection and external alert routing remain prerequisites.
+- The Delta adapter exists but is not live-tested in a Databricks workspace.
+  Mage/Airflow wrappers and rolling research features are optional future scopes.
+- Workflow pin remains `f63ec56a3cc936408d792956ae583c3c96a825bd`; never refresh
+  or edit vendored files as part of provider work.
 
-## Next recommended scope: offline coverage of the live Dagster path
+## Next scoped work: CFTC on a separate branch
 
-This work is **not started**. Keep it limited to testing the existing bounded
-AAII XLS path and making small injection changes needed for deterministic tests.
-The current Dagster success test exercises CSV input; XLS tests characterize
-synthetic cells and HTTP failures, while successful real XLS ingestion was a
-manual live verification. Close that specific automated coverage gap.
+After reviewing/merging the AAII completion branch, create a fresh CFTC branch
+from the updated base. Begin with a new numbered spec for **TFF futures-only**,
+using Spec 001 as design context. CFTC is not implemented. First verify official
+endpoints/dataset IDs, schema, terms, pagination, reporting dates/publication
+semantics and revisions. Capture a bounded sample and invented offline fixtures;
+then define acceptance criteria before coding. No API identifier or entitlement
+is assumed by the existing broad design.
 
-Acceptance criteria:
+Keep report families and futures-only/combined scopes separate. Preserve contract
+codes as strings and use provider-specific Silver/Gold schemas, not AAII's share
+schema. Reuse manifest, archive/revision/audit, warehouse and Dagster patterns only
+where their contracts fit. Deliver one local end-to-end slice before widening
+report families. FINRA short-sale volume and OFR STFM remain subsequent sources.
+No CFTC implementation, AAII scheduling or cloud provisioning is included here.
 
-1. Add a small synthetic XLS fixture with the verified header/date-cell layout;
-   document its provenance and do not commit the provider's actual workbook.
-2. Execute the Dagster job's `live: true` path with injected HTTP/clock behavior,
-   an explicit bounded window and runtime YAML. No provider or cloud access.
-3. Assert original response/HTTP/selection retention, unshifted reported dates,
-   Silver/Gold counts, Parquet publication and materialization metadata.
-4. Re-run unchanged input to prove no duplicate versions; exercise a correction
-   and verify the previous version remains selectable by an as-of cutoff.
-5. Verify blocking failure leaves prior published data intact and the schedule
-   stopped. Reuse the isolated PostgreSQL test setup where useful; never write
-   tests into the live `additional_market_data` database.
+## Repository resumption
 
-Likely files: `tests/test_entrypoints.py`, `tests/test_live_aaii.py`, synthetic
-fixtures, and only if necessary `sources/aaii.py` or `orchestration/dagster_defs.py`.
-Update the active spec/tasks before changing behavior. Stop after these criteria
-pass; additional sources, rolling features, schema redesign, scheduler enabling,
-cloud deployment and Databricks provisioning are separate scopes.
-
-## Repository and resumption checks
-
-The user requested the work be committed and pushed as a series: local workflow
-snapshot, AAII core, platform adapters/resources, CI, then checkpoint/docs. Inspect
-`git status --short`, `git log --oneline -5`, and branch tracking before editing;
-preserve any subsequent user changes. The configured destination is this project's
-`origin/main`. No force-push or automatic submodule refresh is part of resumption.
-
-The first four checkpoint commits are `73f38d7` (local workflow snapshot),
-`aeb20cb` (AAII core), `173823d` (platform adapters/resources), and `5568fb5`
-(CI). `c422c5d` contains the main documentation checkpoint. A final documentation
-follow-up records the hosted-CI block below; use `git log` for its revision.
-
-### Hosted CI status at the original 2026-10-26 push
-
-The initial five-commit series was pushed to `origin/main`. The
-[hosted run](https://github.com/thatquantguy44/market-medallion/actions/runs/40434195208)
-for `c422c5d` failed **before any steps started**: GitHub reported recent account
-payments failed or the Actions spending limit must be increased. This is an
-account-level execution block, not a test or workflow-code failure. Local
-verification remains 54 passing tests; do not describe hosted CI as passing.
-
-This was the execution status at the original checkpoint, not a code failure.
-The successful 2026-10-30 rename run below supersedes the execution block. No
-billing settings or verification gates were changed by the agent. The recommended
-engineering task remains the offline bounded live Dagster coverage above.
-
-### Repository rename
-
-Use `https://github.com/thatquantguy44/market-medallion.git` for `origin` and
-`pipelines/market-medallion` for the local checkout. The former local directory
-name is a compatibility symlink so historical absolute raw/audit pointers remain
-resolvable. Do not rewrite immutable Bronze metadata or alter the live database
-or volume names to match branding. Both CLI entrypoints and the existing Python
-import path remain valid. The next data-engineering task above is unchanged.
-
-```bash
-python3 scripts/verify_agent_skills.py
-.venv/bin/python -m pytest -q
-.venv/bin/ruff check .
-.venv/bin/ruff format --check .
-```
-
-Without `MARKET_DATA_TEST_POSTGRES_DSN`, the PostgreSQL test skips. With a fresh,
-dedicated test database, the last complete suite had 54 passing tests. Creating a
-new test database is described in the development guide. Do not start with a new
-live fetch, overwrite local configuration, reset a persistent volume, or enable
-a recurring download; recurring entitlement and reuse review remain open.
-
-Hosted verification for rename commit `88e0354` passed on 2026-10-30:
-[run 41113974074](https://github.com/thatquantguy44/market-medallion/actions/runs/41113974074).
-All 54 tests (including PostgreSQL), the local snapshot check, lint/formatting,
-and source/wheel builds succeeded. The next scoped task can resume directly;
-there is no outstanding CI-execution prerequisite at this checkpoint.
+Inspect status, branch tracking and recent commits before editing. The user
+requested focused commits and push; do not merge or force-push automatically.
+The remote is `https://github.com/thatquantguy44/market-medallion.git`.
+The actual checkout is `pipelines/market-medallion`; its old path is a compatibility
+symlink. Preserve database/volume identifiers and immutable historical metadata.
+Empty untracked `docs/pipelines.md` and `docs/handoff.md` were left as user work.
+Use `docs/development/verification.md` for current checks and hosted CI evidence.
