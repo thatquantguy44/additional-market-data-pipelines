@@ -11,3 +11,10 @@ postgres:
   password_env: AAII_POSTGRES_PASSWORD
   sslmode: prefer
   connect_timeout: 15
+operations:
+  overlap_days: 28
+  max_age_days: 10
+  http_attempts: 3
+  # Set true only after verifying your permission for recurring acquisition.
+  # Dagster's live schedule also remains STOPPED until explicitly enabled.
+  scheduled_live_access: false

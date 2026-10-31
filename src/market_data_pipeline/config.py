@@ -2,7 +2,7 @@
 
 import os
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
@@ -47,10 +47,19 @@ class PostgresConfig:
 
 
 @dataclass(frozen=True)
+class AaiiOperations:
+    overlap_days: int = 28
+    max_age_days: int = 10
+    http_attempts: int = 3
+    scheduled_live_access: bool = False
+
+
+@dataclass(frozen=True)
 class RuntimeConfig:
     warehouse: str = "sqlite"
     root: Path = Path("data/aaii")
     postgres: PostgresConfig | None = None
+    operations: AaiiOperations = field(default_factory=AaiiOperations)
 
 
 def load_config(path: Path) -> RuntimeConfig:
@@ -58,8 +67,8 @@ def load_config(path: Path) -> RuntimeConfig:
         value = yaml.load(path.read_text(), Loader=UniqueLoader)
     except yaml.YAMLError as exc:
         raise ValueError("invalid runtime YAML") from exc
-    if not isinstance(value, dict) or set(value) - {"warehouse", "root", "postgres"}:
-        raise ValueError("runtime config fields must be warehouse, root, postgres")
+    if not isinstance(value, dict) or set(value) - {"warehouse", "root", "postgres", "operations"}:
+        raise ValueError("runtime config fields must be warehouse, root, postgres, operations")
     backend = value.get("warehouse", "sqlite")
     if backend not in ("sqlite", "postgres"):
         raise ValueError("warehouse must be sqlite or postgres")
@@ -107,7 +116,21 @@ def load_config(path: Path) -> RuntimeConfig:
             "verify-full",
         ):
             raise ValueError("unsupported postgres.sslmode")
-    return RuntimeConfig(backend, root, postgres)
+    ops = value.get("operations", {})
+    if not isinstance(ops, dict) or set(ops) - set(AaiiOperations.__dataclass_fields__):
+        raise ValueError("unknown AAII operations fields")
+    operations = AaiiOperations(**ops)
+    for key, lower, upper in (
+        ("overlap_days", 7, 90),
+        ("max_age_days", 1, 90),
+        ("http_attempts", 1, 5),
+    ):
+        entry = getattr(operations, key)
+        if type(entry) is not int or not lower <= entry <= upper:
+            raise ValueError(f"operations.{key} must be an integer in [{lower},{upper}]")
+    if type(operations.scheduled_live_access) is not bool:
+        raise ValueError("operations.scheduled_live_access must be boolean")
+    return RuntimeConfig(backend, root, postgres, operations)
 
 
 def resolve_runtime(

@@ -4,11 +4,13 @@ https://docs.dagster.io/api/dagster/assets
 https://docs.dagster.io/guides/automate/schedules
 """
 
+import os
 from pathlib import Path
 
 import dagster as dg
 
 from market_data_pipeline.config import load_config, resolve_runtime
+from market_data_pipeline.operations import weekly_window
 from market_data_pipeline.pipeline import run
 
 
@@ -30,8 +32,9 @@ class AaiiConfig(dg.Config):
 )
 def aaii_sentiment(context: dg.AssetExecutionContext, config: AaiiConfig) -> dg.MaterializeResult:
     try:
+        runtime = load_config(Path(config.config_path)) if config.config_path else None
         root, _, dsn = resolve_runtime(
-            config=load_config(Path(config.config_path)) if config.config_path else None,
+            config=runtime,
             root=Path(config.root) if config.root is not None else None,
             warehouse=config.warehouse,
         )
@@ -39,7 +42,12 @@ def aaii_sentiment(context: dg.AssetExecutionContext, config: AaiiConfig) -> dg.
             from market_data_pipeline.sources.aaii import run_live
 
             result = run_live(
-                Path(config.manifest_path), root, start=config.start, end=config.end, dsn=dsn
+                Path(config.manifest_path),
+                root,
+                start=config.start,
+                end=config.end,
+                dsn=dsn,
+                max_attempts=runtime.operations.http_attempts if runtime else 3,
             )
         else:
             result = run(
@@ -77,4 +85,41 @@ schedule = dg.ScheduleDefinition(
     execution_timezone="America/New_York",
     default_status=dg.DefaultScheduleStatus.STOPPED,
 )
-defs = dg.Definitions(assets=[aaii_sentiment], jobs=[job], schedules=[schedule])
+
+
+@dg.schedule(
+    name="aaii_weekly_live",
+    job=job,
+    cron_schedule="0 10 * * 4",
+    execution_timezone="America/New_York",
+    default_status=dg.DefaultScheduleStatus.STOPPED,
+)
+def live_schedule(context):
+    path = os.environ.get("MARKET_MEDALLION_CONFIG")
+    if not path:
+        return dg.SkipReason("Set MARKET_MEDALLION_CONFIG for the runtime YAML")
+    runtime = load_config(Path(path))
+    if not runtime.operations.scheduled_live_access:
+        return dg.SkipReason(
+            "Scheduled live acquisition requires an explicit access acknowledgement"
+        )
+    start, end = weekly_window(context.scheduled_execution_time, runtime.operations.overlap_days)
+    return dg.RunRequest(
+        run_key=f"aaii-{context.scheduled_execution_time.isoformat()}",
+        run_config={
+            "ops": {
+                "aaii_sentiment": {
+                    "config": {
+                        "live": True,
+                        "config_path": path,
+                        "manifest_path": "manifests/aaii-investor-sentiment-xls.yml",
+                        "start": start,
+                        "end": end,
+                    }
+                }
+            }
+        },
+    )
+
+
+defs = dg.Definitions(assets=[aaii_sentiment], jobs=[job], schedules=[schedule, live_schedule])
