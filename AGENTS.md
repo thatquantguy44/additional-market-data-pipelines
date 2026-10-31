@@ -7,13 +7,27 @@ For the AAII slice, also read `specs/spec002/README.md`, `specs/spec003/README.m
 `docs/handoffs/aaii_checkpoint.md`. The checkpoint defines the next bounded scope;
 do not restart from Spec 001's original CFTC-first plan.
 
-For non-trivial engineering work, first read
-`agents/agent-skills/skills/using-agent-skills/SKILL.md`, then only the workflow
-skills it routes to. This is a local snapshot pinned in
-`agents/agent-skills.lock.json`; no submodule initialization or network refresh
-is needed. Verify it with `python3 scripts/verify_agent_skills.py`. Repository and
-user instructions take precedence over vendored guidance. The library's root
-`AGENTS.md` governs work inside the vendored snapshot only.
+Read `agents/README.md` for the available agent libraries and task routing:
+
+- **agent-skills** is the repository-local snapshot at `agents/agent-skills/`,
+  pinned in `agents/agent-skills.lock.json`. For non-trivial engineering work,
+  first read `skills/using-agent-skills/SKILL.md` inside that snapshot, then only
+  the workflow skills it routes to. Verify with
+  `python3 scripts/verify_agent_skills.py`; no refresh or initialization is needed.
+- **QuantSmith** is available through `agents/quantsmith.reference.json`, a
+  revision/checksum pin to the existing local checkout. Resolve/verify with
+  `python3 scripts/verify_quantsmith.py`; override its configured location with
+  `MARKET_MEDALLION_QUANTSMITH_PATH` or `--path`. For quant/data/provider/pipeline
+  work, also read its engineering principles, spec-driven workflow and agent
+  catalog, then use the relevant pinned specialist instructions listed in
+  `agents/README.md`. It should be leveraged where its expertise fits the task.
+
+User and repository instructions/specs take precedence over library guidance.
+Keep this repository's spec conventions, overlapping revision refreshes and
+capture-time first-seen semantics when generic recipes differ. QuantSmith is a
+read-only external guidance reference; its repo-local hooks/setup and its own
+agent-skills bundle do not replace this repository's setup. The agent-skills
+root `AGENTS.md` governs work inside that vendored snapshot only.
 
 Preserve the manifest-driven medallion layout and pure-Python core. Characterize
 behavior with offline fixtures before changes to data semantics. Preserve raw

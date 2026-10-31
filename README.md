@@ -191,6 +191,11 @@ PostgreSQL tests require a dedicated empty test database; instructions are in
 - [Data dictionary](docs/dictionary/data_dictionary.md)
 - [Pinned engineering workflow library](docs/development/agent_library.md)
 
+[Available agent libraries](agents/README.md) documents both the pinned local
+agent-skills snapshot and the configurable QuantSmith local reference. Quant/data
+work should also use the relevant verified QuantSmith specialist guidance;
+`MARKET_MEDALLION_QUANTSMITH_PATH` can point to another matching local checkout.
+
 The workflow library is vendored directly under `agents/agent-skills/`, with its
 exact upstream revision and content checksum in `agents/agent-skills.lock.json`.
 No submodule setup or GitHub refresh is needed. Verify the local snapshot with

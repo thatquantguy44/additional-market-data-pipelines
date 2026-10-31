@@ -209,3 +209,35 @@ existing live service/volume remains available. No provider request, cloud
 provisioning or schedule enablement occurred. CFTC implementation remains the
 next separate branch after review/merge of AAII. The empty `docs/handoff.md` and
 separate roadmap/spec draft edits remain user work.
+
+## Configurable QuantSmith guidance reference — 2026-10-30
+
+The user authorized a local QuantSmith library reference alongside the existing
+agent-skills snapshot. `agents/README.md` now documents discovery, task routing,
+path overrides, exact pin scope and compatibility with this project's contracts;
+root `AGENTS.md` directs agents to use both libraries where relevant.
+
+`agents/quantsmith.reference.json` records the supplied local checkout,
+`MARKET_MEDALLION_QUANTSMITH_PATH`, commit
+`5deea85438f6d46a8a14ddb85e3821a65fa62f4e`, tree
+`db9b442f9ef97ad94c8fe05cae483d4d28344165`, and SHA-256 digests for 61 selected
+guidance files. Each file was compared with its committed bytes when registered.
+This is a local-reference pin of adopted guidance, not a vendored/runtime pin.
+The external checkout's unrelated uncommitted drafts remain outside that pin.
+
+- Five fixture-based Git tests pass: default/environment/explicit path selection,
+  relocation with spaces, missing path handling, guidance drift at the same HEAD,
+  changed commit rejection, unrelated-work preservation and path-boundary checks.
+- Full offline suite: **72 passed, two PostgreSQL tests skipped**. The pipeline
+  runtime is unchanged; hosted CI can run those two on its isolated service.
+- Ruff lint/formatting and both real local library verifiers pass. agent-skills
+  remains unchanged at its existing revision with all 188 files/symlinks verified.
+- The QuantSmith resolver uses local Git and file reads only, with optional Git
+  index writes disabled. It does not fetch, reset, copy SDK credentials/config,
+  install hooks, import SDK runtimes or modify the external working tree.
+- The verifier is included in the source distribution for its fixture tests;
+  machine-specific QuantSmith availability is not required by hosted CI.
+
+No dependencies, application code, data, schedules, external library files or
+vendored snapshot contents changed. Separate roadmap/FX/web specification drafts
+remain untouched.

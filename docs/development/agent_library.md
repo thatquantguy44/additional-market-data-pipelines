@@ -1,4 +1,11 @@
-# Pinned engineering workflow library
+# Agent libraries and pin maintenance
+
+The discovery/routing document is [`agents/README.md`](../../agents/README.md).
+Both agent-skills and QuantSmith are available; project/user instructions take
+precedence. QuantSmith supplies relevant quant/data role guidance through a
+configurable external reference, while agent-skills is fully vendored here.
+
+## agent-skills snapshot
 
 `agents/agent-skills/` is a complete local snapshot stored as ordinary files in
 this repository. It is not a Git submodule and contains no nested Git metadata.
@@ -31,3 +38,24 @@ metadata, and replace the snapshot. Preserve the MIT license. Update the lock's
 revision/tree and content digest together, run all three validators, review the
 normal-file diff, and update this document. No automated update-on-start or
 floating branch is configured.
+
+
+## QuantSmith local reference
+
+`agents/quantsmith.reference.json` records the provided local checkout,
+`MARKET_MEDALLION_QUANTSMITH_PATH` override, revision
+`5deea85438f6d46a8a14ddb85e3821a65fa62f4e`, original tree and hashes for 61
+selected guidance files. `python3 scripts/verify_quantsmith.py` resolves and
+checks these without fetching, checking out, installing or modifying the SDK.
+`--path` overrides the environment/default location. The pin covers adopted
+guidance, not the entire working tree or runtime dependency environment.
+Unrelated local drafts are reported; changed pinned guidance/revision fails.
+
+Use the role/standards routing and compatibility notes in `agents/README.md`.
+Changing the selected revision or adopting extra guidance is a deliberate
+reviewed reference update; changing only the library location can use the path
+override. The external SDK's credentials/configuration, hooks and runtime state
+remain outside this project. Its agent-skills subset is not used to refresh our
+snapshot. Fresh clones include agent-skills but need a matching local QuantSmith
+checkout/path to resolve this optional external reference. Hosted CI verifies
+pin behavior using temporary fixture repositories, not this machine's SDK path.

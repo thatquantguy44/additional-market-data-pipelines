@@ -30,6 +30,16 @@ pinned by `agents/agent-skills.lock.json` to revision
 `f63ec56a3cc936408d792956ae583c3c96a825bd`. It replaces the old submodule;
 normal use and checksum verification require no network refresh.
 
+The user also authorized a configurable local QuantSmith guidance reference.
+`agents/README.md` is the library discovery/routing document; root `AGENTS.md`
+directs agents to both libraries. `agents/quantsmith.reference.json` records
+revision `5deea85438f6d46a8a14ddb85e3821a65fa62f4e` and checksums for 61
+adopted guidance files. Verify with `scripts/verify_quantsmith.py`; the path
+can be overridden with `MARKET_MEDALLION_QUANTSMITH_PATH`. The external checkout
+has unrelated drafts; those remain untouched and outside the guidance pin.
+Relevant QuantSmith roles should inform new pipeline work while preserving this
+repository's source contracts and captured-first-seen/revision semantics.
+
 The user requested a sister repository named
 `additional-market-data-pipelines`, beside `fred-bronze-to-gold-pipeline`.
 They selected positioning and market structure as the main spec, requested the
