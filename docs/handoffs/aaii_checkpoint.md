@@ -8,7 +8,7 @@ capabilities are complete; do not restart its scaffold or silently enable downlo
 ## Read first
 
 Read root `AGENTS.md`, `README.md`, Specs 002/003, this checkpoint, `tasks/todo.md`,
-and `docs/deployment/aaii_runbook.md`. Use the pinned local workflow library via
+the master register `docs/pipelines.md`, and `docs/deployment/aaii_runbook.md`. Use the pinned local workflow library via
 `agents/agent-skills/skills/using-agent-skills/SKILL.md`. The master handoff and
 roadmap retain the complete 14-source backlog; this checkpoint does not replace it.
 
@@ -101,5 +101,17 @@ requested focused commits and push; do not merge or force-push automatically.
 The remote is `https://github.com/thatquantguy44/market-medallion.git`.
 The actual checkout is `pipelines/market-medallion`; its old path is a compatibility
 symlink. Preserve database/volume identifiers and immutable historical metadata.
-Empty untracked `docs/pipelines.md` and `docs/handoff.md` were left as user work.
+The subsequent organization task populates `docs/pipelines.md` as the master
+register. `docs/handoff.md` and separate FX/web draft/spec changes remain user work.
 Use `docs/development/verification.md` for current checks and hosted CI evidence.
+
+
+## Pipeline folder follow-up
+
+The user authorized source organization after completion. All AAII implementation
+now lives under `src/market_data_pipeline/aaii/`; `shared/` contains only generic
+file/YAML helpers. Root CLI and Dagster module paths still work. Internal Python
+imports moved with the files; use the documented migration guide. Manifests,
+parser strings, raw paths, tables, data semantics and schedule defaults are
+unchanged. No live data migration or provider request is needed. The master
+register is `docs/pipelines.md`; update it when another pipeline is implemented.

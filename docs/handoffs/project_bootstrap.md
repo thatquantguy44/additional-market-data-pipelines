@@ -17,6 +17,14 @@ Read [the AAII checkpoint](aaii_checkpoint.md) for evidence and operating limits
 The user selected CFTC on a separate subsequent branch. Recurring AAII permission,
 production orchestration/alerts and live Databricks verification remain open.
 
+The user subsequently authorized pipeline-owned source folders and a master
+pipeline document. AAII now lives under `src/market_data_pipeline/aaii/`; common
+file/YAML helpers are under `shared/`. Existing root CLI/Dagster entrypoints
+forward to AAII. Read [the master pipeline register](../pipelines.md) and
+[import migration guide](../development/pipeline_layout.md) before adding a source.
+The register includes the local FX/web-traffic drafts as unimplemented proposals.
+Those separate draft/spec changes remain outside the structure commits.
+
 The workflow library is now a complete local snapshot at `agents/agent-skills/`,
 pinned by `agents/agent-skills.lock.json` to revision
 `f63ec56a3cc936408d792956ae583c3c96a825bd`. It replaces the old submodule;

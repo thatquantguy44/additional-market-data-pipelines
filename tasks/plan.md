@@ -42,7 +42,18 @@ pipeline branch. Spec 003 supersedes the earlier stop after the test-only scope.
 4. Portable owned-table/Bronze backup, empty-target restore and snapshot retention.
 5. Verify against isolated PostgreSQL, update the runbook/handoff, commit and push.
 
-Existing empty untracked docs/pipelines.md and docs/handoff.md are preserved as user work.
+The subsequent organization task uses docs/pipelines.md as the authorized master
+register; the empty docs/handoff.md remains separate user work.
 
 The next scoped source is CFTC TFF futures-only on a separate branch after review/merge.
 See the checkpoint for provider-contract verification and new-spec acceptance steps.
+
+
+## Pipeline-owned package follow-up
+
+The user requested one folder per pipeline and a master pipeline document.
+`tasks/pipeline_layout.md` tracks the bounded refactor and verification.
+AAII owns its implementation under `src/market_data_pipeline/aaii/`, shared
+helpers stay provider-independent, and existing root commands remain supported.
+`docs/pipelines.md` is the package/status register; other provider builds remain
+separate scopes. The roadmap remains the research/access backlog.

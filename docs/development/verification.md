@@ -171,3 +171,41 @@ Hosted completion verification passed for `0a18288`:
 The clean Linux checkout passed all 68 tests, including PostgreSQL, pinned
 snapshot integrity, Ruff lint/formatting and source/wheel builds. The completion
 branch is pushed; no merge into main or recurring schedule enablement occurred.
+
+## Pipeline-owned source organization — 2026-10-30
+
+The user requested a folder per pipeline and a master pipeline document.
+AAII's full implementation now lives under `src/market_data_pipeline/aaii/`.
+Only provider-independent file/time/lock and YAML helpers live in `shared/`.
+The existing repository CLI/console scripts and Dagster module remain supported;
+`python -m market_data_pipeline.aaii` is also available. Internal imports and all
+owned callers/notebook/runbook examples were migrated; see the layout guide.
+
+- **69 tests passed**, including both integration tests on a fresh dedicated
+  PostgreSQL 17.6 container on localhost 55439. The extra case runs the existing
+  CLI import/as-of/replay/error flow through the pipeline-owned module too.
+  Both root and pipeline-owned Dagster definitions resolve the same assets.
+- Ruff lint/formatting, package builds, dependency checks and pinned snapshot
+  integrity pass. No dependency or vendored file changed.
+- A clean wheel inspection confirmed the canonical AAII/shared modules are
+  included and the old internal modules are absent. Both module commands were
+  exercised from the unpacked wheel, isolated from the source checkout.
+  Both installed console entrypoints also validate the manifest.
+- An AST comparison of 15 moved modules confirmed their behavior bodies are
+  unchanged after excluding import nodes. Shared file/YAML helpers were moved
+  from the existing implementation without changing their contracts.
+- A read-only check of the existing live PostgreSQL target confirmed 2,046
+  Silver/Gold rows, four audit runs and reported dates 1987-07-24 through
+  2026-10-22. The committed Parquet Gold still has 2,046 rows. No live data,
+  identity, archive, parser-version string, table or schedule was migrated.
+- `docs/pipelines.md` contains 20 unique concrete pipeline/candidate IDs, retains
+  every roadmap ID, distinguishes actual packages from absent/proposed packages,
+  and links the current AAII contract/runbook/handoff. New organization-document
+  links were checked locally. Separate uncommitted FX/web specs remain outside
+  this refactor and are identified as local drafts in the register.
+
+The disposable PostgreSQL test container was removed after verification; the
+existing live service/volume remains available. No provider request, cloud
+provisioning or schedule enablement occurred. CFTC implementation remains the
+next separate branch after review/merge of AAII. The empty `docs/handoff.md` and
+separate roadmap/spec draft edits remain user work.

@@ -54,3 +54,10 @@ local workbook backfilled 2,046 valid reported dates, with three quarantined row
 and a partial audit result. Unchanged rerun added zero versions; backed-up and
 replayed Silver/Gold match exactly. Details and the next CFTC scope are in
 `docs/handoffs/aaii_checkpoint.md`; operational prerequisites above remain open.
+
+
+The subsequent user-authorized organization refactor groups AAII under
+`src/market_data_pipeline/aaii/` and adds `docs/pipelines.md` as the master register.
+It changes internal import paths, preserving CLI/Dagster entrypoints and stored
+contracts. See `docs/development/pipeline_layout.md`; no provider/data semantics
+are changed and CFTC remains a separate implementation scope.
