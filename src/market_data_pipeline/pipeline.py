@@ -1,5 +1,5 @@
 import logging
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 from market_data_pipeline.catalogs.manifest import load_manifest
@@ -23,17 +23,54 @@ def promote_capture(root, envelope, payload, manifest, bronze_path, dsn=None):
             captured_date = datetime.fromisoformat(
                 envelope["retrieved_at"].replace("Z", "+00:00")
             ).date()
+            quarantined = []
+            quality_message = None
             if manifest.format == "xls":
                 bounds = envelope.get("selection", {})
+                is_backfill = envelope["parser_version"] == "aaii-xls-v2"
+                use_quarantine = is_backfill and bounds.get("on_invalid") == "quarantine"
                 rows = normalize_xls(
                     payload,
                     manifest,
                     captured_date,
-                    selection(bounds.get("start"), bounds.get("end")),
+                    selection(
+                        bounds.get("start"), bounds.get("end"), max_days=None if is_backfill else 90
+                    ),
+                    quarantine=quarantined if use_quarantine else None,
                 )
+                if is_backfill:
+                    gaps = [
+                        {
+                            "previous_reported_date": a.survey_date,
+                            "reported_date": b.survey_date,
+                            "gap_days": (
+                                date.fromisoformat(b.survey_date)
+                                - date.fromisoformat(a.survey_date)
+                            ).days,
+                        }
+                        for a, b in zip(rows, rows[1:], strict=False)
+                        if (
+                            date.fromisoformat(b.survey_date) - date.fromisoformat(a.survey_date)
+                        ).days
+                        > 8
+                    ]
+                    atomic_json(
+                        bronze_path / "quality.json",
+                        {
+                            "accepted_rows": len(rows),
+                            "quarantined": quarantined,
+                            "gaps": gaps,
+                            "selection": bounds,
+                        },
+                    )
+                    if quarantined:
+                        quality_message = (
+                            f"Historical backfill: {len(quarantined)} rows quarantined; "
+                            "review quality.json"
+                        )
             else:
                 rows = normalize(payload, manifest, captured_date)
-            inserted = warehouse.promote(rows, envelope)
+            inserted = warehouse.promote(rows, envelope, quality_message=quality_message)
         except Exception as exc:
             # Validation messages contain row/rule details, never data or credentials.
             message = str(exc) if isinstance(exc, ValueError) else type(exc).__name__
@@ -51,6 +88,7 @@ def promote_capture(root, envelope, payload, manifest, bronze_path, dsn=None):
                     "accepted": True,
                     "row_count": len(rows),
                     "inserted_versions": inserted,
+                    "quarantined_rows": len(quarantined),
                 },
             )
             snapshot = publish(root, warehouse)
@@ -68,15 +106,17 @@ def promote_capture(root, envelope, payload, manifest, bronze_path, dsn=None):
             raise
     result = {
         "run_id": run_id,
-        "status": "succeeded",
+        "status": "partial" if quarantined else "succeeded",
         "row_count": len(rows),
+        "quarantined_rows": len(quarantined),
         "inserted_versions": inserted,
         "snapshot": snapshot,
     }
     logger.info(
-        "dataset=%s run_id=%s status=succeeded rows=%s versions=%s",
+        "dataset=%s run_id=%s status=%s rows=%s versions=%s",
         manifest.dataset,
         run_id,
+        result["status"],
         len(rows),
         inserted,
     )

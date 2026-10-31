@@ -29,7 +29,7 @@ def replay(source: Path, destination: Path, *, dsn: str | None = None) -> dict:
     if not captures:
         raise ValueError("no Bronze captures found")
     captures.sort(key=lambda capture: (capture[0]["retrieved_at"], capture[0]["run_id"]))
-    succeeded, rejected = 0, []
+    succeeded, rejected, partial = 0, [], []
     with writer_lock(destination):
         with Warehouse(destination, dsn) as warehouse:
             if warehouse.runs() or warehouse.versions():
@@ -44,8 +44,11 @@ def replay(source: Path, destination: Path, *, dsn: str | None = None) -> dict:
                 rejected.append(envelope["run_id"])
                 continue
             try:
-                promote_capture(destination, envelope, payload, manifest, directory, dsn)
-                succeeded += 1
+                outcome = promote_capture(destination, envelope, payload, manifest, directory, dsn)
+                if outcome["status"] == "partial":
+                    partial.append(envelope["run_id"])
+                else:
+                    succeeded += 1
             except ValueError:
                 rejected.append(envelope["run_id"])
-    return {"succeeded": succeeded, "rejected": rejected}
+    return {"succeeded": succeeded, "rejected": rejected, "partial": partial}

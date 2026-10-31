@@ -201,7 +201,7 @@ class Warehouse:
             ),
         )
 
-    def promote(self, rows, envelope) -> int:
+    def promote(self, rows, envelope, *, quality_message=None) -> int:
         with self.transaction():
             dataset = envelope["manifest"]["dataset"]
             basis = envelope["manifest"].get("date_basis", "survey_date")
@@ -259,5 +259,11 @@ class Warehouse:
             self.execute("DELETE FROM aaii_gold_latest")
             for row in self.gold():
                 self._insert("aaii_gold_latest", GOLD_COLUMNS, tuple(row[k] for k in GOLD_COLUMNS))
-            self.status(envelope["run_id"], "succeeded", len(rows), count)
+            self.status(
+                envelope["run_id"],
+                "partial" if quality_message else "succeeded",
+                len(rows),
+                count,
+                quality_message,
+            )
         return count

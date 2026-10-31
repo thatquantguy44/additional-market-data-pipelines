@@ -64,6 +64,8 @@ def archive(
         envelope.update(transport)
     if date_selection:
         envelope["selection"] = date_selection
+        if date_selection.get("mode") == "backfill":
+            envelope["parser_version"] = "aaii-xls-v2"
     directory = root / "bronze" / manifest.dataset / envelope["run_id"]
     directory.mkdir(parents=True)
     with (directory / f"payload.{manifest.format}").open("xb") as file:
@@ -82,8 +84,14 @@ def load_archive(path: Path) -> tuple[dict, bytes]:
     payload = (path / f"payload.{suffix}").read_bytes()
     if hashlib.sha256(payload).hexdigest() != envelope["sha256"]:
         raise ValueError(f"Bronze digest mismatch: {path.name}")
-    if envelope["parser_version"] != ("aaii-xls-v1" if suffix == "xls" else PARSER_VERSION):
+    allowed = {"aaii-xls-v1", "aaii-xls-v2"} if suffix == "xls" else {PARSER_VERSION}
+    if envelope["parser_version"] not in allowed:
         raise ValueError("unsupported archived parser version")
+    if (
+        envelope["parser_version"] == "aaii-xls-v2"
+        and envelope.get("selection", {}).get("mode") != "backfill"
+    ):
+        raise ValueError("XLS v2 archives require explicit backfill selection")
     if not isinstance(envelope["run_id"], str) or not (
         len(envelope["run_id"]) == 32 and all(c in "0123456789abcdef" for c in envelope["run_id"])
     ):
