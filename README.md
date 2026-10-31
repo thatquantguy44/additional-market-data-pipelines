@@ -7,11 +7,24 @@ data. The first executable slice imports an authorized local **AAII Investor
 Sentiment Survey CSV or official XLS**, stores observed revisions in SQLite or PostgreSQL, and
 publishes typed Parquet snapshots. Dagster provides the initial orchestration.
 
-**Status:** local CSV ingestion, replay, Parquet, PostgreSQL adapter, CLI, and
-Dagster definitions and bounded official XLS downloads are implemented. A live
-four-observation load to PostgreSQL was verified. The Databricks Delta publisher
-has not been exercised in a workspace. No cloud infrastructure or running schedule
-is deployed. Other sources remain planned.
+**Status:** the AAII local pipeline is complete under [Spec 003](specs/spec003/README.md):
+CSV/XLS ingestion, observed revisions, replay, Parquet, SQLite/PostgreSQL,
+Dagster integration, weekly bounds/retries/freshness, historical backfill and
+verified backup/restore. The local PostgreSQL warehouse contains 2,046 reported
+dates through October 22, 2026; three invalid historical rows are quarantined.
+Recurring AAII acquisition permission remains unverified, so both schedules stay
+stopped. Databricks publishing is implemented but has not been live-tested.
+CFTC is the next separate pipeline branch; other connectors remain planned.
+
+## Pipeline organization
+
+[The master pipeline register](docs/pipelines.md) tracks all implemented, planned,
+draft and candidate pipelines, their package locations, specs and next work.
+Each implemented pipeline owns a subfolder of `src/market_data_pipeline/`.
+AAII lives in `aaii/`, including its parsers, warehouse/publishers, configuration,
+operations, CLI and Dagster definitions. Provider-independent file/YAML helpers
+live in `shared/`; root CLI/Dagster entrypoints remain supported.
+See [the package layout and import migration guide](docs/development/pipeline_layout.md).
 
 ## Run the first slice
 
@@ -118,13 +131,44 @@ DAGSTER_HOME="$PWD/.dagster" .venv/bin/dagster dev \
 ```
 
 Launch `aaii_sentiment_job` using [the example run configuration](resources/dagster-aaii.yml).
-The Thursday 10:00 America/New_York schedule is **stopped by default**. It imports
-a supplied local CSV; it does not fetch data from AAII. Dagster owns execution,
-retry visibility, and materialization metadata. Pure transforms and the pipeline
-remain callable independently, allowing later Airflow or Mage wrappers without
-changing data semantics. See [the orchestration decision](docs/development/adr001-dagster.md).
-For an explicit bounded live job, use [the live run config](resources/dagster-aaii-live.yml)
-and inject the password into the worker environment. This does not enable the schedule.
+Both Thursday 10:00 America/New_York schedules are **stopped by default**.
+`aaii_thursday_local_import` imports a supplied local file;
+`aaii_weekly_live` calculates overlapping XLS date bounds and also requires
+`operations.scheduled_live_access: true` in the runtime YAML identified by
+`MARKET_MEDALLION_CONFIG`. That acknowledgement records your verified permission;
+it does not establish provider entitlement or start a daemon.
+
+Dagster owns execution and materialization metadata. Pure transforms and the
+pipeline remain callable independently, allowing later Airflow or Mage wrappers.
+See [the orchestration decision](docs/development/adr001-dagster.md). For a manual
+bounded live job, use [the live run config](resources/dagster-aaii-live.yml) and
+inject the password into the worker environment.
+
+## Operations, history and recovery
+
+Optional runtime YAML `operations` settings control `overlap_days` (28),
+`max_age_days` (10), `http_attempts` (3), and `scheduled_live_access` (false).
+`weekly` is an explicit live invocation using today's New York date and the
+configured overlap. `check` performs no provider request and returns nonzero for
+stale data, a trailing failure/partial outcome or unavailable publication.
+
+```bash
+.venv/bin/python -m market_data_pipeline check --config config/config.yaml
+.venv/bin/python -m market_data_pipeline backfill \
+  --input data/inbox/sentiment.xls --config config/config.yaml \
+  --start 1987-01-01 --end 2026-10-30 --quarantine-invalid
+.venv/bin/python -m market_data_pipeline backup --config config/config.yaml \
+  --destination data/backups/aaii-example
+.venv/bin/python -m market_data_pipeline retain --config config/config.yaml --keep 5
+```
+
+Backfill is strict unless quarantine is explicitly requested. Quarantine writes
+`quality.json`, promotes valid rows with a **partial** audit outcome, and exits 2.
+First-seen is the import time; historical rows do not supply historical vintages.
+Backups contain pipeline-owned logical state, Bronze and the committed snapshot;
+restore requires an empty root and warehouse. Retention defaults to a dry run.
+See [the operation and recovery runbook](docs/deployment/aaii_runbook.md) before
+restoring or applying retention. Credentials and local provider workbooks stay ignored.
 
 ## Verification and project context
 
@@ -138,6 +182,7 @@ and inject the password into the worker environment. This does not enable the sc
 PostgreSQL tests require a dedicated empty test database; instructions are in
 [development](docs/development/README.md). Tests never require a live AAII service.
 
+- [Spec 003: AAII completion](specs/spec003/README.md)
 - [Spec 002: executable AAII slice](specs/spec002/README.md)
 - [Spec 001: original broader design](specs/spec001/README.md)
 - [Roadmap and full source backlog](docs/roadmap.md)
@@ -145,6 +190,11 @@ PostgreSQL tests require a dedicated empty test database; instructions are in
 - [Stopping checkpoint and next scoped task](docs/handoffs/aaii_checkpoint.md)
 - [Data dictionary](docs/dictionary/data_dictionary.md)
 - [Pinned engineering workflow library](docs/development/agent_library.md)
+
+[Available agent libraries](agents/README.md) documents both the pinned local
+agent-skills snapshot and the configurable QuantSmith local reference. Quant/data
+work should also use the relevant verified QuantSmith specialist guidance;
+`MARKET_MEDALLION_QUANTSMITH_PATH` can point to another matching local checkout.
 
 The workflow library is vendored directly under `agents/agent-skills/`, with its
 exact upstream revision and content checksum in `agents/agent-skills.lock.json`.

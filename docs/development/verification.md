@@ -1,6 +1,7 @@
 # AAII slice verification
 
-Verified 2026-10-26 (America/New_York), Python 3.12 on macOS.
+Initial slice verified 2026-10-26 (America/New_York), Python 3.12 on macOS.
+The Spec 003 completion results below supersede these initial counts/state.
 
 - **54 tests passed** with `MARKET_DATA_TEST_POSTGRES_DSN` pointing to a dedicated
   disposable PostgreSQL 17.6 container; no live AAII request is part of the suite.
@@ -120,3 +121,123 @@ Hosted verification also passed for rename commit `88e0354` on 2026-10-30:
 The hosted job passed all 54 tests, including isolated PostgreSQL integration,
 snapshot verification, lint/formatting, and source/wheel builds. This supersedes
 the original account-level execution block; no billing settings were changed.
+
+
+## Spec 003 AAII completion — 2026-10-30 America/New_York
+
+- Full suite: **68 passed**, including both real PostgreSQL tests against a
+  dedicated disposable PostgreSQL 17.6 instance on localhost 55439. No test
+  contacts AAII or writes to the live warehouse. Without the DSN: 66 passed,
+  two PostgreSQL tests skipped.
+- Synthetic binary XLS workbooks exercise Dagster's real XLS success/failure
+  paths, idempotency, correction/reversion, as-of results, materializations and
+  exact raw/HTTP/selection retention. Fixture generation uses optional isolated
+  xlwt tooling; it adds no runtime dependency. The source package includes XLS.
+- Operational tests verify New York overlap, stale/failed/partial state handling,
+  connection-failure health, archived transient responses, Retry-After pacing,
+  and stopped live schedule gating/dynamic bounds. Configuration defaults keep
+  routine acquisition disabled.
+- Historical tests verify strict rejection, explicit quarantine, partial status,
+  CLI exits, original first-seen times, gaps and deterministic backfill replay.
+- Recovery tests verify inventory/digest rejection, empty-target enforcement,
+  Silver/Gold equality, physical audit pointers, distinct warehouse identity,
+  PostgreSQL isolation and rollback, dry-run retention and current/Bronze protection.
+- Ruff lint/formatting, source/wheel build, dependency checks and pinned library
+  integrity pass. No dependency or vendored snapshot was changed.
+
+The existing authorized workbook was imported offline into the unchanged live
+PostgreSQL target after backing up and restoring the original four-date state to
+an isolated PostgreSQL schema. Backfill run `28556d16d7ee4934bf80e8cd5a521120`
+accepted 2,046 reported dates, 1987-07-24 through 2026-10-22, inserted 2,042
+versions, and quarantined three invalid rows. The repeat import inserted zero.
+The completed history was backed up, restored to SQLite and replayed from Bronze;
+all Silver versions and Gold results matched. Publication timestamps remain null.
+Machine-readable evidence is ignored `data/aaii-live/completion-verification.json`.
+Only a dry-run retention was performed on the live root. No new AAII fetch,
+schedule enablement, cloud deployment or data redistribution occurred.
+
+The three exclusions are 1987-06-26, 1987-07-17 and 1996-01-11, all
+missing/nonnumeric shares. Nine gaps over eight days remain visible. Both
+backfill runs have partial audit status; the health readout intentionally reports
+that trailing partial outcome until a later clean import. Historical observations
+were first seen at the actual import, not reconstructed publication dates.
+
+Recurring AAII acquisition rights, deployed daemon/alert routing, off-machine
+backup policy and live Databricks remain external prerequisites. CFTC remains
+unimplemented and starts on the next separate branch.
+
+Hosted completion verification passed for `0a18288`:
+[GitHub Actions run 41153586929](https://github.com/thatquantguy44/market-medallion/actions/runs/41153586929).
+The clean Linux checkout passed all 68 tests, including PostgreSQL, pinned
+snapshot integrity, Ruff lint/formatting and source/wheel builds. The completion
+branch is pushed; no merge into main or recurring schedule enablement occurred.
+
+## Pipeline-owned source organization — 2026-10-30
+
+The user requested a folder per pipeline and a master pipeline document.
+AAII's full implementation now lives under `src/market_data_pipeline/aaii/`.
+Only provider-independent file/time/lock and YAML helpers live in `shared/`.
+The existing repository CLI/console scripts and Dagster module remain supported;
+`python -m market_data_pipeline.aaii` is also available. Internal imports and all
+owned callers/notebook/runbook examples were migrated; see the layout guide.
+
+- **69 tests passed**, including both integration tests on a fresh dedicated
+  PostgreSQL 17.6 container on localhost 55439. The extra case runs the existing
+  CLI import/as-of/replay/error flow through the pipeline-owned module too.
+  Both root and pipeline-owned Dagster definitions resolve the same assets.
+- Ruff lint/formatting, package builds, dependency checks and pinned snapshot
+  integrity pass. No dependency or vendored file changed.
+- A clean wheel inspection confirmed the canonical AAII/shared modules are
+  included and the old internal modules are absent. Both module commands were
+  exercised from the unpacked wheel, isolated from the source checkout.
+  Both installed console entrypoints also validate the manifest.
+- An AST comparison of 15 moved modules confirmed their behavior bodies are
+  unchanged after excluding import nodes. Shared file/YAML helpers were moved
+  from the existing implementation without changing their contracts.
+- A read-only check of the existing live PostgreSQL target confirmed 2,046
+  Silver/Gold rows, four audit runs and reported dates 1987-07-24 through
+  2026-10-22. The committed Parquet Gold still has 2,046 rows. No live data,
+  identity, archive, parser-version string, table or schedule was migrated.
+- `docs/pipelines.md` contains 20 unique concrete pipeline/candidate IDs, retains
+  every roadmap ID, distinguishes actual packages from absent/proposed packages,
+  and links the current AAII contract/runbook/handoff. New organization-document
+  links were checked locally. Separate uncommitted FX/web specs remain outside
+  this refactor and are identified as local drafts in the register.
+
+The disposable PostgreSQL test container was removed after verification; the
+existing live service/volume remains available. No provider request, cloud
+provisioning or schedule enablement occurred. CFTC implementation remains the
+next separate branch after review/merge of AAII. The empty `docs/handoff.md` and
+separate roadmap/spec draft edits remain user work.
+
+## Configurable QuantSmith guidance reference — 2026-10-30
+
+The user authorized a local QuantSmith library reference alongside the existing
+agent-skills snapshot. `agents/README.md` now documents discovery, task routing,
+path overrides, exact pin scope and compatibility with this project's contracts;
+root `AGENTS.md` directs agents to use both libraries where relevant.
+
+`agents/quantsmith.reference.json` records the supplied local checkout,
+`MARKET_MEDALLION_QUANTSMITH_PATH`, commit
+`5deea85438f6d46a8a14ddb85e3821a65fa62f4e`, tree
+`db9b442f9ef97ad94c8fe05cae483d4d28344165`, and SHA-256 digests for 61 selected
+guidance files. Each file was compared with its committed bytes when registered.
+This is a local-reference pin of adopted guidance, not a vendored/runtime pin.
+The external checkout's unrelated uncommitted drafts remain outside that pin.
+
+- Five fixture-based Git tests pass: default/environment/explicit path selection,
+  relocation with spaces, missing path handling, guidance drift at the same HEAD,
+  changed commit rejection, unrelated-work preservation and path-boundary checks.
+- Full offline suite: **72 passed, two PostgreSQL tests skipped**. The pipeline
+  runtime is unchanged; hosted CI can run those two on its isolated service.
+- Ruff lint/formatting and both real local library verifiers pass. agent-skills
+  remains unchanged at its existing revision with all 188 files/symlinks verified.
+- The QuantSmith resolver uses local Git and file reads only, with optional Git
+  index writes disabled. It does not fetch, reset, copy SDK credentials/config,
+  install hooks, import SDK runtimes or modify the external working tree.
+- The verifier is included in the source distribution for its fixture tests;
+  machine-specific QuantSmith availability is not required by hosted CI.
+
+No dependencies, application code, data, schedules, external library files or
+vendored snapshot contents changed. Separate roadmap/FX/web specification drafts
+remain untouched.

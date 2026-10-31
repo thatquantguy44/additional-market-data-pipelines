@@ -3,7 +3,7 @@
 # Copy the entire data root (Bronze + committed Parquet snapshots) to a UC volume.
 from pathlib import Path
 
-from market_data_pipeline.io.databricks import publish_delta
+from market_data_pipeline.aaii.io.databricks import publish_delta
 
 dbutils.widgets.text("snapshot", "")  # noqa: F821
 dbutils.widgets.text("catalog", "")  # noqa: F821

@@ -26,18 +26,17 @@ See `docs/development/verification.md` for exact scope and remaining external ch
   offline checksums, root guidance and CI verification are in place.
 - [x] Record a stopping checkpoint, service/data state, semantics and next scope.
 
-## Next recommended task — not started
+## Authorized AAII completion (Spec 003)
 
-See `docs/handoffs/aaii_checkpoint.md` for acceptance criteria and boundaries.
-Hosted verification now passes: the 2026-10-30 rename run for `88e0354` completed
-all 54 tests, snapshot integrity, lint/formatting and package builds. The earlier
-account-level execution block no longer prevents the next scope from starting.
+- [x] Synthetic XLS and full offline Dagster integration.
+- [x] Weekly window, bounded retries, freshness/status and gated stopped schedule.
+- [x] Explicit historical backfill with DQ quarantine and deterministic replay.
+- [x] Owned-table/Bronze backups, empty-target restore and safe snapshot retention.
+- [x] Isolated PostgreSQL verification, documentation, commits and branch push.
+- [ ] Follow-on CFTC branch after AAII completion (separate scope, not implemented here).
 
-- [ ] Add a synthetic XLS fixture matching the verified provider layout.
-- [ ] Test the bounded successful `live: true` Dagster path with injected HTTP
-  and clock behavior, YAML configuration and no provider requests.
-- [ ] Assert raw/HTTP/date-selection lineage, reported dates, Silver/Gold,
-  Parquet and materialization metadata; prove unchanged reruns are idempotent.
-- [ ] Cover a correction/as-of query and a blocking failure; keep schedules stopped.
-- [ ] Run offline checks and isolated PostgreSQL integration, update verification,
-  and stop without expanding provider or deployment scope.
+
+Completion verification: 68 tests passed with isolated PostgreSQL, plus verified
+local historical backfill, zero-change rerun, backup/restore and replay equality.
+Current pickup and external operational prerequisites are in the AAII checkpoint.
+CFTC begins on a new branch after review/merge; it is not implemented here.

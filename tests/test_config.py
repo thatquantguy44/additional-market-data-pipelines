@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from market_data_pipeline.config import load_config, resolve_runtime
+from market_data_pipeline.aaii.config import load_config, resolve_runtime
 
 
 def write_config(tmp_path, **updates):

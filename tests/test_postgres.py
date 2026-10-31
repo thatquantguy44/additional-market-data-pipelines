@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from market_data_pipeline.io.warehouse import Warehouse
-from market_data_pipeline.pipeline import run
+from market_data_pipeline.aaii.io.warehouse import Warehouse
+from market_data_pipeline.aaii.pipeline import run
 
 
 @pytest.mark.postgres
@@ -59,3 +59,49 @@ def test_real_postgres_revision_and_transaction_contract(tmp_path):
         assert len(warehouse.versions()) == 4
         assert len(warehouse.gold()) == 2
         assert warehouse.runs()[-1]["status"] == "failed"
+
+
+@pytest.mark.postgres
+def test_postgres_owned_state_backup_restores_to_an_empty_isolated_schema(tmp_path):
+    dsn = os.environ.get("MARKET_DATA_TEST_POSTGRES_DSN")
+    if not dsn:
+        pytest.skip("dedicated PostgreSQL test database required")
+    import json
+    import uuid
+
+    import psycopg
+    from psycopg import sql
+    from psycopg.conninfo import make_conninfo
+
+    from market_data_pipeline.aaii.recovery import backup, restore
+
+    token = uuid.uuid4().hex[:10]
+    schemas = [f"recovery_source_{token}", f"recovery_target_{token}"]
+    with psycopg.connect(dsn, autocommit=True) as connection:
+        for schema in schemas:
+            connection.execute(sql.SQL("CREATE SCHEMA {}").format(sql.Identifier(schema)))
+    source_dsn, target_dsn = [
+        make_conninfo(dsn, options=f"-c search_path={schema}") for schema in schemas
+    ]
+    root = tmp_path / "source"
+    run(
+        Path("tests/fixtures/aaii/sentiment.csv"),
+        Path("manifests/aaii-investor-sentiment.yml"),
+        root,
+        dsn=source_dsn,
+        captured_at=datetime(2026, 10, 26, tzinfo=UTC),
+    )
+    package = tmp_path / "backup"
+    backup(root, package, dsn=source_dsn)
+    with pytest.raises(ValueError, match="empty warehouse"):
+        restore(package, tmp_path / "occupied", dsn=source_dsn)
+    restored = tmp_path / "restored"
+    restore(package, restored, dsn=target_dsn)
+    with Warehouse(root, source_dsn) as source, Warehouse(restored, target_dsn) as target:
+        assert source.versions() == target.versions()
+        assert source.gold() == target.gold()
+        assert all(Path(r["bronze_path"]).is_dir() for r in target.runs())
+    assert (
+        json.loads((root / ".warehouse.json").read_text())["warehouse_id"]
+        != json.loads((restored / ".warehouse.json").read_text())["warehouse_id"]
+    )

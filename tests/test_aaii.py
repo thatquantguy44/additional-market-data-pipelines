@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from market_data_pipeline.catalogs.manifest import load_manifest, manifest_from_dict
-from market_data_pipeline.data.aaii import normalize
+from market_data_pipeline.aaii.data.csv import normalize
+from market_data_pipeline.aaii.manifest import load_manifest, manifest_from_dict
 
 MANIFEST = Path("manifests/aaii-investor-sentiment.yml")
 FIXTURE = Path("tests/fixtures/aaii/sentiment.csv")

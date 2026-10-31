@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from market_data_pipeline.catalogs.manifest import load_manifest
-from market_data_pipeline.data.aaii_xls import normalize_rows, selection
+from market_data_pipeline.aaii.data.xls import normalize_rows, selection
+from market_data_pipeline.aaii.manifest import load_manifest
 
 MANIFEST = Path("manifests/aaii-investor-sentiment-xls.yml")
 
@@ -70,8 +70,8 @@ def test_live_selection_must_be_explicit_ordered_and_bounded(start, end):
 
 
 def test_http_failure_is_archived_and_cannot_promote_rows(tmp_path, monkeypatch):
-    import market_data_pipeline.sources.aaii as source
-    from market_data_pipeline.io.warehouse import Warehouse
+    import market_data_pipeline.aaii.source as source
+    from market_data_pipeline.aaii.io.warehouse import Warehouse
 
     class Response(io.BytesIO):
         code = 503

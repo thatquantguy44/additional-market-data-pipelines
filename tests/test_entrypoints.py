@@ -7,27 +7,31 @@ from pathlib import Path
 import pytest
 
 
-def cli(*args, env=None):
+def cli(*args, env=None, module="market_data_pipeline"):
     return subprocess.run(
-        [sys.executable, "-m", "market_data_pipeline", *map(str, args)],
+        [sys.executable, "-m", module, *map(str, args)],
         capture_output=True,
         text=True,
         env=env,
     )
 
 
-def test_cli_run_asof_replay_and_invalid_input(tmp_path):
+@pytest.mark.parametrize("module", ["market_data_pipeline", "market_data_pipeline.aaii"])
+def test_cli_run_asof_replay_and_invalid_input(tmp_path, module):
+    def invoke(*args, **kwargs):
+        return cli(*args, module=module, **kwargs)
+
     root = tmp_path / "output"
-    result = cli("run", "--input", "tests/fixtures/aaii/sentiment.csv", "--root", root)
+    result = invoke("run", "--input", "tests/fixtures/aaii/sentiment.csv", "--root", root)
     assert result.returncode == 0, result.stderr
     assert json.loads(result.stdout)["inserted_versions"] == 2
-    result = cli("gold", "--root", root, "--as-of", "2000-01-01T00:00:00Z")
+    result = invoke("gold", "--root", root, "--as-of", "2000-01-01T00:00:00Z")
     assert result.returncode == 0
     assert json.loads(result.stdout) == []
-    assert cli("gold", "--root", root, "--as-of", "2026-10-26").returncode != 0
-    assert cli("replay", "--source-root", root, "--root", tmp_path / "replay").returncode == 0
+    assert invoke("gold", "--root", root, "--as-of", "2026-10-26").returncode != 0
+    assert invoke("replay", "--source-root", root, "--root", tmp_path / "replay").returncode == 0
     environment = {k: v for k, v in os.environ.items() if k != "MARKET_DATA_POSTGRES_DSN"}
-    result = cli(
+    result = invoke(
         "run",
         "--input",
         "tests/fixtures/aaii/sentiment.csv",
@@ -44,7 +48,10 @@ def test_cli_run_asof_replay_and_invalid_input(tmp_path):
 
 def test_dagster_job_materializes_fixture(tmp_path):
     dagster = pytest.importorskip("dagster")
-    from market_data_pipeline.orchestration.dagster_defs import aaii_sentiment, defs
+    from market_data_pipeline.aaii.dagster_defs import aaii_sentiment, defs
+    from market_data_pipeline.orchestration.dagster_defs import defs as repository_defs
+
+    assert repository_defs is defs
 
     dagster.Definitions.validate_loadable(defs)
     job = defs.resolve_job_def("aaii_sentiment_job")

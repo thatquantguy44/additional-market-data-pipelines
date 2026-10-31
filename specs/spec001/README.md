@@ -62,6 +62,9 @@ manifests/*.yml → source API/download → Bronze (raw payload + metadata)
   + audit (runs, dataset runs, DQ outcomes, lineage)
 ```
 
+The original source layout below is superseded by the user-authorized
+[pipeline-owned package layout](../../docs/development/pipeline_layout.md).
+
 ## Proposed project structure
 
 Keep `config/`, `manifests/`, `sql/`, `resources/`, `notebooks/`, `tests/`,

@@ -2,10 +2,11 @@ import json
 import shutil
 from pathlib import Path
 
-from market_data_pipeline.catalogs.manifest import manifest_from_dict
-from market_data_pipeline.io.bronze import load_archive, writer_lock
-from market_data_pipeline.io.warehouse import Warehouse
-from market_data_pipeline.pipeline import promote_capture
+from market_data_pipeline.aaii.io.bronze import load_archive
+from market_data_pipeline.aaii.io.warehouse import Warehouse
+from market_data_pipeline.aaii.manifest import manifest_from_dict
+from market_data_pipeline.aaii.pipeline import promote_capture
+from market_data_pipeline.shared.files import writer_lock
 
 
 def replay(source: Path, destination: Path, *, dsn: str | None = None) -> dict:
@@ -29,7 +30,7 @@ def replay(source: Path, destination: Path, *, dsn: str | None = None) -> dict:
     if not captures:
         raise ValueError("no Bronze captures found")
     captures.sort(key=lambda capture: (capture[0]["retrieved_at"], capture[0]["run_id"]))
-    succeeded, rejected = 0, []
+    succeeded, rejected, partial = 0, [], []
     with writer_lock(destination):
         with Warehouse(destination, dsn) as warehouse:
             if warehouse.runs() or warehouse.versions():
@@ -44,8 +45,11 @@ def replay(source: Path, destination: Path, *, dsn: str | None = None) -> dict:
                 rejected.append(envelope["run_id"])
                 continue
             try:
-                promote_capture(destination, envelope, payload, manifest, directory, dsn)
-                succeeded += 1
+                outcome = promote_capture(destination, envelope, payload, manifest, directory, dsn)
+                if outcome["status"] == "partial":
+                    partial.append(envelope["run_id"])
+                else:
+                    succeeded += 1
             except ValueError:
                 rejected.append(envelope["run_id"])
-    return {"succeeded": succeeded, "rejected": rejected}
+    return {"succeeded": succeeded, "rejected": rejected, "partial": partial}

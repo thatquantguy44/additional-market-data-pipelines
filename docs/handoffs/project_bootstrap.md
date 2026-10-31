@@ -10,20 +10,36 @@ distribution metadata and the request identifier use the new name. The import
 path remains `market_data_pipeline`, and both CLI names are supported.
 Existing PostgreSQL, roles, Docker projects/volumes and data are preserved.
 
-**Current stopping point:** the first AAII slice, configured PostgreSQL live run,
-and pinned local workflow snapshot are complete. Read
-[AAII checkpoint and next scoped work](aaii_checkpoint.md) before implementation.
-The recommended next task is offline end-to-end coverage of the existing bounded
-live Dagster path. It does not add a source or enable a schedule.
-The checkpoint and repository rename were pushed to `origin/main`. Hosted CI
-for rename commit `88e0354` passed all 54 tests, snapshot verification, lint,
-formatting and package builds on 2026-10-30. The earlier account-level execution
-block no longer prevents verification. The focused checkpoint links the run.
+**Current stopping point:** AAII's local completion scope under Spec 003 is
+implemented on `feature/pipeline-completion`: offline XLS/Dagster integration,
+weekly bounds/retries/status, historical backfill, backups/restore and retention.
+Read [the AAII checkpoint](aaii_checkpoint.md) for evidence and operating limits.
+The user selected CFTC on a separate subsequent branch. Recurring AAII permission,
+production orchestration/alerts and live Databricks verification remain open.
+
+The user subsequently authorized pipeline-owned source folders and a master
+pipeline document. AAII now lives under `src/market_data_pipeline/aaii/`; common
+file/YAML helpers are under `shared/`. Existing root CLI/Dagster entrypoints
+forward to AAII. Read [the master pipeline register](../pipelines.md) and
+[import migration guide](../development/pipeline_layout.md) before adding a source.
+The register includes the tracked FX/web-traffic specifications. FX initial scope
+is accepted; web-traffic source selection remains draft. Neither connector is
+implemented. These specifications do not change the CFTC-first follow-on priority.
 
 The workflow library is now a complete local snapshot at `agents/agent-skills/`,
 pinned by `agents/agent-skills.lock.json` to revision
 `f63ec56a3cc936408d792956ae583c3c96a825bd`. It replaces the old submodule;
 normal use and checksum verification require no network refresh.
+
+The user also authorized a configurable local QuantSmith guidance reference.
+`agents/README.md` is the library discovery/routing document; root `AGENTS.md`
+directs agents to both libraries. `agents/quantsmith.reference.json` records
+revision `5deea85438f6d46a8a14ddb85e3821a65fa62f4e` and checksums for 61
+adopted guidance files. Verify with `scripts/verify_quantsmith.py`; the path
+can be overridden with `MARKET_MEDALLION_QUANTSMITH_PATH`. The external checkout
+has unrelated drafts; those remain untouched and outside the guidance pin.
+Relevant QuantSmith roles should inform new pipeline work while preserving this
+repository's source contracts and captured-first-seen/revision semantics.
 
 The user requested a sister repository named
 `additional-market-data-pipelines`, beside `fred-bronze-to-gold-pipeline`.
@@ -85,7 +101,7 @@ have not been validated by live extraction. All 14 IDs remain in the roadmap.
 
 ## Next work
 
-Current contract: Spec 002, with plan/tasks under `tasks/`. Run the README demo
+Current contracts: Specs 002 and 003, with plan/tasks under `tasks/`. Run the README demo
 and use `docs/deployment/aaii_runbook.md` for PostgreSQL, Dagster, Parquet, replay,
 and Delta publishing. Local tests cover validation, revisions/reversion, as-of
 changes, raw retention, replay, CLI, and Dagster. PostgreSQL has a real opt-in
@@ -93,20 +109,28 @@ test; use a dedicated empty test database. `origin/main` is configured for this
 repository; the user requested a commit/push series at closeout. No cloud
 deployment or recurring download is active.
 
-Completed follow-up: strict runtime YAML now controls host/port/database/login,
-role/schema, SSL and timeout, with environment-only passwords. The official XLS
-was downloaded and inspected; four reported dates in October 2026 are persisted
-in database additional_market_data, schema aaii, via role aaii_writer, localhost
-port 55438. The persistent Compose project is additional-market-data-live.
-Settings are in ignored config/config.yaml and .env; raw and Parquet evidence is
-in data/aaii-live/verification.json. Reimport added zero versions.
+Runtime YAML controls PostgreSQL host/port/database/login, role/schema, SSL,
+timeout and environment-only passwords. Optional operations settings control
+weekly overlap, age threshold, HTTP attempts and the scheduled-access gate.
+The original official XLS download and four-date PostgreSQL load were preserved.
+An explicit offline historical backfill now holds 2,046 valid reported dates,
+1987-07-24 through 2026-10-22. Three invalid rows remain quarantined with partial
+audit status. The current data/backup evidence is in ignored
+`data/aaii-live/completion-verification.json`. Same-payload rerun added zero
+versions; verified backup/restore and replay reproduce Silver/Gold exactly.
 
-The next bounded engineering task and acceptance criteria are in the checkpoint.
-After that, provider work is to verify recurring acquisition entitlement and reuse terms
-before configuring scheduled downloads. Keep Reported Date labels unshifted. Next
-platform work: live-test Delta in a selected workspace; configure durable worker
-storage, secret injection, backups, freshness monitoring, and alerts before
-production scheduling. Mage/Airflow wrappers remain optional.
+The persistent service is unchanged: localhost 55438, database
+`additional_market_data`, schema `aaii`, effective role `aaii_writer`, Compose
+project `additional-market-data-live`. Settings are ignored `config/config.yaml`
+and `.env`. No new provider request or recurring schedule was enabled.
+
+Next source: create a separate CFTC branch after AAII review/merge. Verify official
+TFF futures-only access/schema/publication contracts and write a new numbered spec
+before coding. Preserve provider-specific grain; CFTC remains unimplemented.
+Next AAII operational work: establish recurring acquisition permission and reuse
+terms before scheduling; deploy durable workers, external monitoring/alerts and
+off-machine backups as appropriate. Live Delta requires a selected workspace.
+Mage/Airflow wrappers remain optional; Dagster is the working orchestrator.
 
 After the initial pipeline slice, the recommended order for the new additions
 is NY Fed Primary Dealer Statistics → SEC N-MFP → FINRA ATS/non-ATS → OFR Hedge
